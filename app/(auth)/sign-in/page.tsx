@@ -1,8 +1,10 @@
-
+import SignInForm from '@/components/auth/SignInForm'
 
 const SignIn = () => {
     return (
-        <div>SignIn</div>
+        <div className='flex items-center justify-center mt-auto mb-auto h-screen'>
+            <SignInForm />
+        </div>
     )
 }
 
