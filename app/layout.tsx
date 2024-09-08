@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import NextAuthWrapper from "@/lib/nextauth.provider";
+import "@/app/globals.css";
+import NextAuthWrapper from "@/lib/next.auth.wrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Learning Hub",
-  description: "Empowering minds, shaping future",
+  description: "Empowering minds, shaping future"
 };
 
 export default function RootLayout({
