@@ -1,6 +1,6 @@
 import SignInForm from '@/components/auth/SignInForm'
 
-const SignIn = () => {
+const SignInPage = () => {
     return (
         <div className='flex items-center justify-center mt-auto mb-auto h-screen'>
             <SignInForm />
@@ -8,4 +8,4 @@ const SignIn = () => {
     )
 }
 
-export default SignIn
+export default SignInPage
