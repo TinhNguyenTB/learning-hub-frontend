@@ -13,10 +13,10 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { FaGoogle, FaGithub } from "react-icons/fa";
-import TooltipCustom from "@/components/custom/Tooltip.custom"
 import { Separator } from "@/components/ui/separator"
 import Link from "next/link"
+import { PasswordInput } from "@/components/custom/PasswordInput"
+
 
 const formSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
@@ -70,7 +70,7 @@ const SignUpForm = () => {
                             <FormItem>
                                 <FormLabel>Password</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Type your password here..." {...field} type="password" />
+                                    <PasswordInput placeholder="Type your password here..." {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -83,30 +83,19 @@ const SignUpForm = () => {
                             <FormItem>
                                 <FormLabel>Confirm Password</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Type your confirm password here..." {...field} type="password" />
+                                    <PasswordInput placeholder="Type your confirm password here..." {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
                     <Button type="submit" className="w-full">Sign up</Button>
-                    <Separator />
-                    <p className="text-center">Or sign up with</p>
-                    <div className="flex gap-6 items-center justify-center">
-                        <TooltipCustom
-                            trigger={<FaGithub className="h-8 w-8" />}
-                            content="Sign up with Github"
-                        />
-                        <TooltipCustom
-                            trigger={<FaGoogle className="h-8 w-8 text-red-600" />}
-                            content="Sign up with Google"
-                        />
-                    </div>
-                    <div className="text-center">
-                        Already have an account?
-                        <Link href={'/sign-in'} className="hover:text-blue-600"> Sign in now</Link>
-                    </div>
                 </form>
+                <Separator className="my-4" />
+                <div className="text-center">
+                    Already have an account?
+                    <Link href={'/sign-in'} className="hover:text-blue-600"> Sign in now</Link>
+                </div>
             </fieldset>
         </Form>
     )

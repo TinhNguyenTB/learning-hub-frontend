@@ -8,7 +8,6 @@ interface IUser {
     image: string
     role: string
     isActive: boolean
-    accountType: string
 }
 
 declare module "next-auth/jwt" {

@@ -17,6 +17,8 @@ import { FaGoogle, FaGithub } from "react-icons/fa";
 import TooltipCustom from "@/components/custom/Tooltip.custom"
 import { Separator } from "@/components/ui/separator"
 import Link from "next/link"
+import { PasswordInput } from "@/components/custom/PasswordInput"
+import { signIn } from "next-auth/react"
 
 const formSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
@@ -65,30 +67,32 @@ const SignInForm = () => {
                             <FormItem>
                                 <FormLabel>Password</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Type your password here..." {...field} type="password" />
+                                    <PasswordInput placeholder="Type your password here..." {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
                     <Button type="submit" className="w-full">Sign in</Button>
-                    <Separator />
-                    <p className="text-center">Or sign in with</p>
-                    <div className="flex gap-6 items-center justify-center">
-                        <TooltipCustom
-                            trigger={<FaGithub className="h-8 w-8" />}
-                            content="Sign in with Github"
-                        />
-                        <TooltipCustom
-                            trigger={<FaGoogle className="h-8 w-8 text-red-600" />}
-                            content="Sign in with Google"
-                        />
-                    </div>
-                    <div className="text-center">
-                        Don't have an account?
-                        <Link href={'/sign-up'} className="hover:text-blue-600"> Sign up now</Link>
-                    </div>
                 </form>
+                <Separator className="my-4" />
+                <p className="text-center">Or sign in with</p>
+                <div className="flex gap-6 items-center justify-center my-4">
+                    <TooltipCustom
+                        trigger={<FaGithub className="h-8 w-8"
+                            onClick={() => signIn("github")}
+                        />}
+                        content="Sign in with Github"
+                    />
+                    <TooltipCustom
+                        trigger={<FaGoogle className="h-8 w-8 text-red-600" />}
+                        content="Sign in with Google"
+                    />
+                </div>
+                <div className="text-center">
+                    Don't have an account?
+                    <Link href={'/sign-up'} className="hover:text-blue-600"> Sign up now</Link>
+                </div>
             </fieldset>
         </Form>
     )
