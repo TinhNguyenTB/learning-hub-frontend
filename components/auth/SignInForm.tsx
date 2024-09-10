@@ -19,6 +19,7 @@ import { Separator } from "@/components/ui/separator"
 import Link from "next/link"
 import { PasswordInput } from "@/components/custom/PasswordInput"
 import { signIn } from "next-auth/react"
+import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
@@ -37,9 +38,18 @@ const SignInForm = () => {
         },
     })
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
+    const router = useRouter();
 
-        console.log(values)
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        const res = await signIn("credentials", {
+            username: values.email,
+            password: values.password,
+            redirect: false
+        })
+        if (!res?.error) {
+            // redirect to home
+            router.push("/")
+        }
     }
 
     return (
@@ -91,7 +101,10 @@ const SignInForm = () => {
                 </div>
                 <div className="text-center">
                     Don't have an account?
-                    <Link href={'/sign-up'} className="hover:text-blue-600"> Sign up now</Link>
+                    <Link href={'/sign-up'} className="hover:text-blue-600 hover:underline"> Sign up now</Link>
+                </div>
+                <div className="text-center mt-2">
+                    <Link className="hover:text-blue-600 hover:underline" href={'/'} >Back to home</Link>
                 </div>
             </fieldset>
         </Form>

@@ -49,6 +49,7 @@ const SignUpForm = () => {
         <Form {...form}>
             <fieldset className="border border-gray-300 rounded-lg p-6">
                 <legend >Sign in to Learning Hub </legend>
+
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 md:min-w-[400px]">
                     <FormField
                         control={form.control}
@@ -94,7 +95,10 @@ const SignUpForm = () => {
                 <Separator className="my-4" />
                 <div className="text-center">
                     Already have an account?
-                    <Link href={'/sign-in'} className="hover:text-blue-600"> Sign in now</Link>
+                    <Link href={'/sign-in'} className="hover:text-blue-600 hover:underline"> Sign in now</Link>
+                </div>
+                <div className="text-center mt-2">
+                    <Link className="hover:text-blue-600 hover:underline" href={'/'} >Back to home</Link>
                 </div>
             </fieldset>
         </Form>
