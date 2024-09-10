@@ -16,9 +16,14 @@ import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import Link from "next/link"
 import { PasswordInput } from "@/components/custom/PasswordInput"
+import { sendRequest } from "@/lib/api"
+import toast from "react-hot-toast"
 
 
 const formSchema = z.object({
+    name: z.string({
+        required_error: "Name is required"
+    }).trim().min(2, "Name must contain at least 2 character"),
     email: z.string().email({ message: "Invalid email address" }),
     password: z.string({
         required_error: "Password is required"
@@ -41,8 +46,23 @@ const SignUpForm = () => {
     })
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-
-        console.log(values)
+        const res = await sendRequest<IBackendRes<any>>({
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register`,
+            method: 'POST',
+            body: {
+                name: values.name,
+                email: values.email,
+                password: values.password,
+                confirmPassword: values.confirmPassword
+            }
+        })
+        if (res?.data) {
+            toast.success("Please check your email to activate account.")
+            form.reset()
+        }
+        else if (res?.error) {
+            toast.error(res?.message)
+        }
     }
 
     return (
@@ -51,6 +71,19 @@ const SignUpForm = () => {
                 <legend >Sign in to Learning Hub </legend>
 
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 md:min-w-[400px]">
+                    <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Name</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Type your name here..." {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                     <FormField
                         control={form.control}
                         name="email"
