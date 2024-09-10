@@ -1,5 +1,6 @@
 'use client'
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useSession, signOut } from "next-auth/react"
+import Link from "next/link"
 
 const TopBar = () => {
     const { data: session } = useSession()
@@ -15,7 +16,7 @@ const TopBar = () => {
     return (
         <div>
             TopBar
-            <button onClick={() => signIn()}>Sign in</button>
+            <Link href={'/sign-in'}>Sign in</Link>
         </div>
 
     )

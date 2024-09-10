@@ -47,7 +47,7 @@ const SignUpForm = () => {
 
     return (
         <Form {...form}>
-            <fieldset className="border border-gray-300 rounded-lg p-6">
+            <fieldset className="border border-gray-300 rounded-md shadow-md p-6">
                 <legend >Sign in to Learning Hub </legend>
 
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 md:min-w-[400px]">

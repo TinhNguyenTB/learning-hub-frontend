@@ -20,6 +20,7 @@ import Link from "next/link"
 import { PasswordInput } from "@/components/custom/PasswordInput"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import toast from "react-hot-toast"
 
 const formSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
@@ -50,11 +51,14 @@ const SignInForm = () => {
             // redirect to home
             router.push("/")
         }
+        else {
+            toast.error(res.error)
+        }
     }
 
     return (
         <Form {...form}>
-            <fieldset className="border border-gray-300 rounded-lg p-6">
+            <fieldset className="border border-gray-300 rounded-md shadow-md p-6">
                 <legend >Sign in to Learning Hub </legend>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 md:min-w-[400px]">
                     <FormField
@@ -104,7 +108,9 @@ const SignInForm = () => {
                     <Link href={'/sign-up'} className="hover:text-blue-600 hover:underline"> Sign up now</Link>
                 </div>
                 <div className="text-center mt-2">
-                    <Link className="hover:text-blue-600 hover:underline" href={'/'} >Back to home</Link>
+                    <Link className="hover:text-blue-600 hover:underline" href={'/'}>
+                        Back to home
+                    </Link>
                 </div>
             </fieldset>
         </Form>
