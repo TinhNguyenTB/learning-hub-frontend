@@ -1,3 +1,5 @@
+'use client'
+
 import {
     Dialog,
     DialogContent,
@@ -21,13 +23,14 @@ import {
 } from "@/components/ui/form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { useRef } from "react";
-import { redirect } from "next/navigation";
+import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface DialogProps {
     open: boolean
     setOpen: (v: boolean) => void
     id: string
+    email: string
 }
 
 interface CountdownProps {
@@ -43,8 +46,10 @@ const formSchema = z.object({
 
 });
 
-const ActivateModal = ({ open, setOpen, id }: DialogProps) => {
-    const startDate = useRef(Date.now());
+const ActivateModal = ({ open, setOpen, id, email }: DialogProps) => {
+    const router = useRouter();
+    const [countdownKey, setCountdownKey] = useState(0); // State to trigger re-render
+    const timeToCount = useRef(Date.now() + 1000 * parseInt(process.env.NEXT_PUBLIC_ACTIVATE_CODE_EXPIRED!)); // 5 minutes
 
     // Renderer callback with condition
     const renderer = ({ minutes, seconds, completed }: CountdownProps) => {
@@ -54,7 +59,10 @@ const ActivateModal = ({ open, setOpen, id }: DialogProps) => {
                 <div className="flex items-center justify-center gap-4">
                     <span className="text-red-600">Your activation code has expired!</span>
                     <Button onClick={() => {
-                        // form.handleSubmit(onSubmit)
+                        handleReActivate()
+                        //Resetting Time
+                        timeToCount.current = Date.now() + 1000 * parseInt(process.env.NEXT_PUBLIC_ACTIVATE_CODE_EXPIRED!)
+                        setCountdownKey(prevKey => prevKey + 1); // Trigger re-render
                     }}>Resend email</Button>
                 </div>
             )
@@ -66,6 +74,22 @@ const ActivateModal = ({ open, setOpen, id }: DialogProps) => {
                     <span>{minutes}:{seconds}</span>
                 </div>
             )
+        }
+    }
+
+    async function handleReActivate() {
+        const res = await sendRequest<IBackendRes<any>>({
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/retry-activate`,
+            method: 'POST',
+            body: {
+                email
+            }
+        })
+        if (!res.error) {
+            toast.success("Please check your email")
+        }
+        else if (res.error) {
+            toast.error(res.message)
         }
     }
 
@@ -88,7 +112,7 @@ const ActivateModal = ({ open, setOpen, id }: DialogProps) => {
         if (res?.data && res.data.isActive) {
             setOpen(false)
             toast.success("Your account has been successfully activated")
-            return redirect("/sign-in")
+            router.push("/sign-in")
         }
         else if (res?.error) {
             toast.error(res.message)
@@ -108,8 +132,9 @@ const ActivateModal = ({ open, setOpen, id }: DialogProps) => {
                     </DialogDescription>
                 </DialogHeader>
                 <Countdown
-                    date={startDate.current + 1000 * 10} // 5 minutes
+                    date={timeToCount.current}
                     renderer={renderer}
+                    key={countdownKey} // Use key to reset countdown
                 />
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 md:min-w-[400px]">

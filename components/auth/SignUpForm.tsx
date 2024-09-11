@@ -47,8 +47,9 @@ const SignUpForm = () => {
         },
     })
 
-    const [openModal, setOpenModal] = useState<boolean>(true);
+    const [openModal, setOpenModal] = useState<boolean>(false);
     const [userId, setUserId] = useState<string>("");
+    const [userEmail, setUserEmail] = useState<string>("");
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const res = await sendRequest<IBackendRes<any>>({
@@ -63,6 +64,7 @@ const SignUpForm = () => {
         })
         if (res?.data) {
             toast.success("Please check your email to activate account.")
+            setUserEmail(res.data.email)
             setUserId(res.data.id)
             setOpenModal(true)
             form.reset()
@@ -74,13 +76,14 @@ const SignUpForm = () => {
 
     return (
         <>
-            {/* {userId && */}
-            <ActivateModal
-                open={openModal}
-                setOpen={setOpenModal}
-                id={userId}
-            />
-            {/* } */}
+            {userId &&
+                <ActivateModal
+                    open={openModal}
+                    setOpen={setOpenModal}
+                    id={userId}
+                    email={userEmail}
+                />
+            }
             <Form {...form}>
                 <fieldset className="border border-gray-300 rounded-md shadow-md p-6">
                     <legend >Sign up to Learning Hub </legend>
