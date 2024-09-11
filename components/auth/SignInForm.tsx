@@ -21,6 +21,8 @@ import { PasswordInput } from "@/components/custom/PasswordInput"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import toast from "react-hot-toast"
+import { useState } from "react"
+import ForgotPasswordModal from "./ForgotPasswordModal"
 
 const formSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
@@ -40,6 +42,7 @@ const SignInForm = () => {
     })
 
     const router = useRouter();
+    const [openModal, setOpenModal] = useState<boolean>(false);
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const res = await signIn("credentials", {
@@ -57,63 +60,74 @@ const SignInForm = () => {
     }
 
     return (
-        <Form {...form}>
-            <fieldset className="border border-gray-300 rounded-md shadow-md p-6">
-                <legend >Sign in to Learning Hub </legend>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 md:min-w-[400px]">
-                    <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Email</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Type your email here..." {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="password"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Password</FormLabel>
-                                <FormControl>
-                                    <PasswordInput placeholder="Type your password here..." {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <Button type="submit" className="w-full">Sign in</Button>
-                </form>
-                <Separator className="my-4" />
-                <p className="text-center">Or sign in with</p>
-                <div className="flex gap-6 items-center justify-center my-4">
-                    <TooltipCustom
-                        trigger={<FaGithub className="h-8 w-8"
-                            onClick={() => signIn("github")}
-                        />}
-                        content="Sign in with Github"
-                    />
-                    <TooltipCustom
-                        trigger={<FaGoogle className="h-8 w-8 text-red-600" />}
-                        content="Sign in with Google"
-                    />
-                </div>
-                <div className="text-center">
-                    Don't have an account?
-                    <Link href={'/sign-up'} className="hover:text-blue-600 hover:underline"> Sign up now</Link>
-                </div>
-                <div className="text-center mt-2">
-                    <Link className="hover:text-blue-600 hover:underline" href={'/'}>
-                        Back to home
-                    </Link>
-                </div>
-            </fieldset>
-        </Form>
+        <>
+            <ForgotPasswordModal
+                open={openModal}
+                setOpen={setOpenModal}
+            />
+
+            <Form {...form}>
+                <fieldset className="border border-gray-300 rounded-md shadow-md p-6">
+                    <legend >Sign in to Learning Hub </legend>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 md:min-w-[400px]">
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Email</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Type your email here..." {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Password</FormLabel>
+                                    <FormControl>
+                                        <PasswordInput placeholder="Type your password here..." {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <Button type="submit" className="w-full">Sign in</Button>
+                    </form>
+                    <p className="mb-2 mt-3 active:underline hover:underline hover:cursor-pointer"
+                        onClick={() => setOpenModal(true)}>
+                        Forgot password?
+                    </p>
+                    <Separator className="my-4" />
+                    <p className="text-center">Or sign in with</p>
+                    <div className="flex gap-6 items-center justify-center my-4">
+                        <TooltipCustom
+                            trigger={<FaGithub className="h-8 w-8"
+                                onClick={() => signIn("github")}
+                            />}
+                            content="Sign in with Github"
+                        />
+                        <TooltipCustom
+                            trigger={<FaGoogle className="h-8 w-8 text-red-600" />}
+                            content="Sign in with Google"
+                        />
+                    </div>
+                    <div className="text-center">
+                        Don't have an account?
+                        <Link href={'/sign-up'} className="hover:text-blue-600 hover:underline"> Sign up now</Link>
+                    </div>
+                    <div className="text-center mt-2">
+                        <Link className="hover:text-blue-600 hover:underline" href={'/'}>
+                            Back to home
+                        </Link>
+                    </div>
+                </fieldset>
+            </Form>
+        </>
     )
 }
 

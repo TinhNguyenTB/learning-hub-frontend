@@ -18,7 +18,7 @@ import Link from "next/link"
 import { PasswordInput } from "@/components/custom/PasswordInput"
 import { sendRequest } from "@/lib/api"
 import toast from "react-hot-toast"
-import ActivateModal from "./ActivateModal"
+import ActivateModal from "@/components/auth/ActivateModal"
 import { useState } from "react"
 
 

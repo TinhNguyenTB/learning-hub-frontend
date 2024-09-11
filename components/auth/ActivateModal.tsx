@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog"
 import Countdown from 'react-countdown';
 import { Input } from "@/components/ui/input";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { sendRequest } from "@/lib/api";
 import toast from "react-hot-toast";
 import { z } from "zod"
