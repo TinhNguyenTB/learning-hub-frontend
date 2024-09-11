@@ -29,7 +29,7 @@ import { useRouter } from "next/navigation";
 interface DialogProps {
     open: boolean
     setOpen: (v: boolean) => void
-    id: string
+    id?: string
     email: string
 }
 

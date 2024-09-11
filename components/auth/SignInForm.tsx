@@ -22,7 +22,10 @@ import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import toast from "react-hot-toast"
 import { useState } from "react"
-import ForgotPasswordModal from "./ForgotPasswordModal"
+import ForgotPasswordModal from "@/components/auth/ForgotPasswordModal"
+import ActivateModal from "@/components/auth/ActivateModal"
+import ConfirmModal from "@/components/custom/ConfirmModal"
+import { sendRequest } from "@/lib/api"
 
 const formSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
@@ -42,7 +45,11 @@ const SignInForm = () => {
     })
 
     const router = useRouter();
-    const [openModal, setOpenModal] = useState<boolean>(false);
+    const [openModalForgotPass, setOpenModalForgotPass] = useState<boolean>(false);
+    const [openModalActivate, setOpenModalActivate] = useState<boolean>(false);
+    const [openConfirmModal, setOpenConfirmModal] = useState<boolean>(false);
+    const [userEmail, setUserEmail] = useState<string>("");
+    const [userId, setUserId] = useState<string>("");
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const res = await signIn("credentials", {
@@ -55,17 +62,58 @@ const SignInForm = () => {
             router.push("/")
         }
         else {
-            toast.error(res.error)
+            const errorResponse = JSON.parse(res.error)
+            const { message, statusCode } = errorResponse
+            if (statusCode === 403) {
+                setUserEmail(values.email)
+                setOpenConfirmModal(true)
+            }
+        }
+    }
+
+    async function retryActivate() {
+        const res = await sendRequest<IBackendRes<any>>({
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/retry-activate`,
+            method: 'POST',
+            body: {
+                email: userEmail
+            }
+        })
+        if (res?.data) {
+            setOpenConfirmModal(false)
+            setUserId(res.data.id)
+            toast.success("Please check your email")
+            setOpenModalActivate(true)
+        }
+        else if (res?.error) {
+            toast.error(res.message)
         }
     }
 
     return (
         <>
             <ForgotPasswordModal
-                open={openModal}
-                setOpen={setOpenModal}
+                key={"ForgotPasswordModal"}
+                open={openModalForgotPass}
+                setOpen={setOpenModalForgotPass}
             />
-
+            <ConfirmModal
+                key={"ConfirmModal"}
+                open={openConfirmModal}
+                setOpen={setOpenConfirmModal}
+                description="Do you want activate account now?"
+                title="Your account is not activated yet"
+                onOk={retryActivate}
+            />
+            {userId &&
+                <ActivateModal
+                    key={"ActivateModal"}
+                    open={openModalActivate}
+                    setOpen={setOpenModalActivate}
+                    id={userId}
+                    email={userEmail}
+                />
+            }
             <Form {...form}>
                 <fieldset className="border border-gray-300 rounded-md shadow-md p-6">
                     <legend >Sign in to Learning Hub </legend>
@@ -98,8 +146,8 @@ const SignInForm = () => {
                         />
                         <Button type="submit" className="w-full">Sign in</Button>
                     </form>
-                    <p className="mb-2 mt-3 active:underline hover:underline hover:cursor-pointer"
-                        onClick={() => setOpenModal(true)}>
+                    <p className="mb-2 mt-3 active:underline hover:underline hover:cursor-pointer inline-block"
+                        onClick={() => setOpenModalForgotPass(true)}>
                         Forgot password?
                     </p>
                     <Separator className="my-4" />

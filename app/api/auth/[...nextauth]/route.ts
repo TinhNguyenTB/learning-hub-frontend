@@ -6,6 +6,7 @@ import { sendRequest } from "@/lib/api";
 import { JWT } from "next-auth/jwt";
 import { IUser } from "@/types/next-auth";
 
+
 export const authOptions: AuthOptions = {
     secret: process.env.NEXTAUTH_SECRET,
     // Configure one or more authentication providers
@@ -22,7 +23,7 @@ export const authOptions: AuthOptions = {
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
-                const res = await sendRequest<IBackendRes<IUser>>({
+                const res = await sendRequest<IBackendRes<any>>({
                     url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/login`,
                     method: 'POST',
                     body: {
@@ -35,7 +36,13 @@ export const authOptions: AuthOptions = {
                     // Any object returned will be saved in `user` property of the JWT
                     return res.data
                 } else {
-                    throw new Error(res?.message as string)
+                    // throw new Error(res?.message as string)
+                    throw new Error(
+                        JSON.stringify({
+                            message: res?.message,
+                            statusCode: res?.statusCode || 400,
+                        })
+                    );
                 }
             }
         })
