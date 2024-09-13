@@ -29,4 +29,15 @@ declare global {
         result: T[]
     }
 
+    interface ICategory<subCategory> {
+        id: string
+        name: string
+        subCategories: ISubcategory[]
+    }
+
+    interface ISubcategory {
+        id: string
+        name: string
+        categoryId: string
+    }
 }
