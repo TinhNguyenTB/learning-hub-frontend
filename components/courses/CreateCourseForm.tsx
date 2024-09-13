@@ -1,4 +1,5 @@
 "use client"
+
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -13,6 +14,10 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Combobox } from "@/components/custom/ComboBox"
+import { useRouter } from "next/navigation"
+import { sendRequest } from "@/lib/api"
+import toast from "react-hot-toast"
+import { Session } from "next-auth"
 
 const formSchema = z.object({
     title: z.string().min(2, { message: "Title must be at least 2 characters" }),
@@ -29,9 +34,10 @@ interface CreateCourseFormProps {
             label: string; // name of subCategory
         }[]
     }[]
+    session: Session
 }
 
-const CreateCourseForm = ({ categories }: CreateCourseFormProps) => {
+const CreateCourseForm = ({ categories, session }: CreateCourseFormProps) => {
     console.log(categories)
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -42,9 +48,33 @@ const CreateCourseForm = ({ categories }: CreateCourseFormProps) => {
         },
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    const router = useRouter();
 
-        console.log(values)
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        try {
+            const res = await sendRequest<IBackendRes<ICourse>>({
+                url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/courses`,
+                method: 'POST',
+                body: {
+                    title: values.title,
+                    categoryId: values.categoryId,
+                    subCategoryId: values.subCategoryId,
+                },
+                headers: {
+                    Authorization: `Bearer ${session.access_token}`
+                }
+            })
+            if (res?.data) {
+                router.push(`/instructor/courses/${res.data.id}/basic`)
+                toast.success("New Course Created")
+            }
+            else if (res?.error) {
+                toast.error(res.message)
+            }
+        } catch (error) {
+            toast.error("Something went wrong")
+            console.log("Create new course error:", error)
+        }
     }
 
     return (
@@ -52,7 +82,7 @@ const CreateCourseForm = ({ categories }: CreateCourseFormProps) => {
             <h1 className="text-xl font-semibold">Let give some basics for your course</h1>
 
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 mt-10">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 mt-10 w-1/2">
                     <FormField
                         control={form.control}
                         name="title"

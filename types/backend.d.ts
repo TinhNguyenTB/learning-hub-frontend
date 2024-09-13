@@ -40,4 +40,18 @@ declare global {
         name: string
         categoryId: string
     }
+
+    interface ICourse {
+        id: string
+        title: string
+        subTitle: string
+        description: string
+        imageUrl: string
+        price: number
+        isPublished: boolean
+        instructorId: string
+        categoryId: string
+        subCategoryId: string
+        levelId: string
+    }
 }

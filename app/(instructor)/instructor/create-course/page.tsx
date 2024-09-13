@@ -1,5 +1,7 @@
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import CreateCourseForm from "@/components/courses/CreateCourseForm"
 import { sendRequest } from "@/lib/api"
+import { getServerSession } from "next-auth";
 
 const CreateCoursePage = async () => {
     let categories;
@@ -12,10 +14,13 @@ const CreateCoursePage = async () => {
         categories = res.data
     }
 
+    const session = await getServerSession(authOptions)
+
     return (
         <>
-            {categories &&
+            {categories && session &&
                 <CreateCourseForm
+                    session={session}
                     categories={categories.map(category => ({
                         label: category.name,
                         value: category.id,

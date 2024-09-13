@@ -16,7 +16,7 @@ const TopBar = () => {
     ]
 
     return (
-        <div className="flex justify-between items-center p-4">
+        <div className="flex justify-between items-center p-4 shadow">
             <Link href={"/"}>
                 <Image src={'/logo.png'} width={150} height={100} alt="logo" />
             </Link>
