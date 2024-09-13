@@ -68,6 +68,9 @@ const SignInForm = () => {
                 setUserEmail(values.email)
                 setOpenConfirmModal(true)
             }
+            else {
+                toast.error(message)
+            }
         }
     }
 

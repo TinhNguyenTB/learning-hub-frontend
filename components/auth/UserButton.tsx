@@ -13,10 +13,14 @@ import { IUser } from "@/types/next-auth"
 import { signOut } from "next-auth/react"
 import { FaAddressCard, FaSignOutAlt } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
+import Link from "next/link"
+import { useState } from "react"
 
 const UserButton = ({ user }: { user: IUser }) => {
+    const [open, setOpen] = useState<boolean>(false);
+
     return (
-        <DropdownMenu>
+        <DropdownMenu open={open} onOpenChange={setOpen}>
             <DropdownMenuTrigger>
                 <Avatar>
                     <AvatarImage
@@ -37,9 +41,11 @@ const UserButton = ({ user }: { user: IUser }) => {
                     <FaAddressCard className="h-5 w-5" />
                     <p>Profile</p>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="flex items-center gap-2">
-                    <RiLockPasswordFill className="h-5 w-5" />
-                    <p>Change password</p>
+                <DropdownMenuItem>
+                    <Link href={'/change-password'} className="flex items-center gap-2">
+                        <RiLockPasswordFill className="h-5 w-5" />
+                        <p>Change password</p>
+                    </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => signOut()} className="flex items-center gap-2">
