@@ -54,4 +54,9 @@ declare global {
         subCategoryId: string
         levelId: string
     }
+
+    interface ILevel {
+        id: string
+        name: string
+    }
 }

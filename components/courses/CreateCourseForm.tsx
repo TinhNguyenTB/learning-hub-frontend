@@ -90,7 +90,7 @@ const CreateCourseForm = ({ categories, session }: CreateCourseFormProps) => {
                             <FormItem>
                                 <FormLabel>Title</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Ex: Web development for beginners" {...field} />
+                                    <Input placeholder="Type your course title here..." {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
