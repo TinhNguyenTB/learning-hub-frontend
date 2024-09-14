@@ -44,8 +44,9 @@ const CourseBasics = async ({ params }: { params: { courseId: string } }) => {
 
     return (
         <div className="px-10">
-            {course && categories && levels &&
+            {course && categories && levels && session &&
                 <EditCourseForm
+                    session={session}
                     course={course}
                     categories={categories?.map(category => ({
                         label: category.name,
