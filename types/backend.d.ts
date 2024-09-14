@@ -59,4 +59,15 @@ declare global {
         id: string
         name: string
     }
+
+    interface ISection {
+        id: string
+        title: string
+        description: string
+        videoUrl: string
+        position: number
+        isPublished: boolean
+        isFree: boolean
+        courseId: string
+    }
 }

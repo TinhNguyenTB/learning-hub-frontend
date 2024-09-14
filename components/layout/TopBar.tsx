@@ -18,7 +18,7 @@ const TopBar = () => {
     return (
         <div className="flex justify-between items-center p-4 shadow">
             <Link href={"/"}>
-                <Image src={'/logo.png'} width={150} height={100} alt="logo" />
+                <Image src={'/logo.png'} width={150} height={100} alt="logo" priority />
             </Link>
             <div className="max-md:hidden w-[400px] rounded-full flex ">
                 <input className="flex-grow bg-[#F5F5F5] rounded-l-full border-none outline-none text-sm pl-4 py-3"
