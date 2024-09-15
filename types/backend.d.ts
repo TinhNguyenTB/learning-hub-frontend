@@ -53,6 +53,7 @@ declare global {
         categoryId: string
         subCategoryId: string
         levelId: string
+        sections: ISection[]
     }
 
     interface ILevel {

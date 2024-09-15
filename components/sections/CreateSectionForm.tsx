@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input"
 import toast from "react-hot-toast"
 import { sendRequest } from "@/lib/api"
 import { Session } from "next-auth"
+import SectionList from "@/components/sections/SectionList"
 
 
 const formSchema = z.object({
@@ -66,6 +67,31 @@ const CreateSectionForm = ({ course, session }: { course: ICourse; session: Sess
         }
     }
 
+    const onReorder = async (updateData: { id: string; position: number }[]) => {
+        try {
+            const res = await sendRequest<IBackendRes<any>>({
+                url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/sections/reorder`,
+                method: 'PUT',
+                body: {
+                    list: updateData,
+                    courseId: course.id,
+                },
+                headers: {
+                    Authorization: `Bearer ${session?.access_token}`
+                }
+            })
+            if (res?.data) {
+                toast.success(res.data.message)
+            }
+            else if (res?.error) {
+                toast.error(res.message)
+            }
+        } catch (error) {
+            toast.error("Something went wrong")
+            console.log("Failed to reorder sections", error)
+        }
+    }
+
     return (
         <div className="px-10 py-6">
             <div className="flex gap-5">
@@ -82,7 +108,11 @@ const CreateSectionForm = ({ course, session }: { course: ICourse; session: Sess
                     )
                 })}
             </div>
-
+            <SectionList
+                items={course.sections || []}
+                onReorder={onReorder}
+                onEdit={(id) => router.push(`/instructor/courses/${course.id}/sections/${id}`)}
+            />
             <h1 className="text-xl font-semibold mt-5">Add New Section</h1>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 mt-5">
