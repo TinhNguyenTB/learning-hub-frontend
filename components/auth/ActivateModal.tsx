@@ -8,7 +8,6 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 import Countdown from 'react-countdown';
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { sendRequest } from "@/lib/api";
 import toast from "react-hot-toast";
@@ -25,6 +24,11 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import {
+    InputOTP,
+    InputOTPGroup,
+    InputOTPSlot,
+} from "@/components/ui/input-otp"
 
 interface DialogProps {
     open: boolean
@@ -42,7 +46,7 @@ interface CountdownProps {
 const formSchema = z.object({
     code: z.string({
         required_error: "Code is required"
-    }).trim().min(12, "Code must contain 12 characters"),
+    }).trim().min(6, "Code must contain 6 characters"),
 
 });
 
@@ -142,16 +146,24 @@ const ActivateModal = ({ open, setOpen, id, email }: DialogProps) => {
                             control={form.control}
                             name="code"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Code</FormLabel>
+                                <FormItem className="flex items-center justify-center">
                                     <FormControl>
-                                        <Input placeholder="Type your activation code here..." {...field} />
+                                        <InputOTP maxLength={6} {...field}>
+                                            <InputOTPGroup>
+                                                <InputOTPSlot index={0} />
+                                                <InputOTPSlot index={1} />
+                                                <InputOTPSlot index={2} />
+                                                <InputOTPSlot index={3} />
+                                                <InputOTPSlot index={4} />
+                                                <InputOTPSlot index={5} />
+                                            </InputOTPGroup>
+                                        </InputOTP>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit">Activate</Button>
+                        <Button type="submit" className="w-full">Activate</Button>
                     </form>
                 </Form>
             </DialogContent>
