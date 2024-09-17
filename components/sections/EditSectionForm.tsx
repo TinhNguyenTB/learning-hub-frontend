@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation"
 import toast from "react-hot-toast"
 import { ArrowLeft, Trash } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
+import ResourceForm from "@/components/sections/ResourceForm"
 
 const formSchema = z.object({
     title: z.string().min(2, { message: "Title must be at least 2 characters" }),
@@ -71,7 +72,9 @@ const EditSectionForm = ({ section, courseId, isCompleted }: EditSectionFormProp
                 </Link>
                 <div className="flex gap-4 items-start">
                     <Button variant={'outline'}>Publish</Button>
-                    <Button variant={'default'}><Trash className="h-4 w-4" /></Button>
+                    <Button variant={'default'} className="bg-red-500 hover:bg-red-600">
+                        <Trash className="h-4 w-4" />
+                    </Button>
                 </div>
             </div>
 
@@ -156,6 +159,11 @@ const EditSectionForm = ({ section, courseId, isCompleted }: EditSectionFormProp
                     </div>
                 </form>
             </Form>
+
+            <ResourceForm
+                section={section}
+                courseId={courseId}
+            />
         </div>
     )
 }
