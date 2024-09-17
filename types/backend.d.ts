@@ -61,6 +61,19 @@ declare global {
         name: string
     }
 
+    interface IVideo {
+        id: string
+        url: string
+        sectionId: string
+    }
+
+    interface IResource {
+        id: string
+        name: string
+        fileUrl: string
+        sectionId: string
+    }
+
     interface ISection {
         id: string
         title: string
@@ -70,5 +83,7 @@ declare global {
         isPublished: boolean
         isFree: boolean
         courseId: string
+        resources: IResource[]
+        video?: IVideo
     }
 }

@@ -28,7 +28,7 @@ const UserButton = ({ user }: { user: IUser }) => {
                             ? user.image : ``}
                     />
                     <AvatarFallback className="uppercase font-bold bg-black text-white">
-                        {user.name.slice(0, 1)}
+                        {user?.name?.slice(0, 1)}
                     </AvatarFallback>
                 </Avatar>
             </DropdownMenuTrigger>

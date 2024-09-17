@@ -93,7 +93,7 @@ const CreateSectionForm = ({ course, session }: { course: ICourse; session: Sess
     }
 
     return (
-        <div className="px-10 py-6">
+        <div className="px-10 py-8">
             <div className="flex gap-5">
                 {routes.map(item => {
                     return (

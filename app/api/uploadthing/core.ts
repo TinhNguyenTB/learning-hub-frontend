@@ -16,7 +16,11 @@ const handleAuth = async () => {
 export const ourFileRouter = {
     courseBanner: f({ image: { maxFileSize: "2MB", maxFileCount: 1 } })
         .middleware(handleAuth)
-        .onUploadComplete(() => { })
+        .onUploadComplete(() => { }),
+    sectionVideo: f({ video: { maxFileSize: "16GB", maxFileCount: 1 } })
+        .middleware(handleAuth)
+        .onUploadComplete(() => { }),
+
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;
