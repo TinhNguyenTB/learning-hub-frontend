@@ -54,6 +54,9 @@ declare global {
         subCategoryId: string
         levelId: string
         sections: ISection[]
+        comments?: IComment[]
+        ratings?: IRating[]
+        averageRating?: number
     }
 
     interface ILevel {
@@ -85,5 +88,24 @@ declare global {
         courseId: string
         resources: IResource[]
         video?: IVideo
+    }
+
+    interface IComment {
+        id: string
+        content: string
+        userId: string
+        courseId: string
+        createdAt: Date
+        updatedAt: Date
+    }
+
+    interface IRating {
+        id: string
+        content: string
+        quality: number
+        userId: string
+        courseId: string
+        createdAt: Date
+        updatedAt: Date
     }
 }
