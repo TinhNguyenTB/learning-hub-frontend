@@ -238,6 +238,7 @@ const EditCourseForm = ({ course, categories, levels, session }: EditCourseFormP
                                         value={field.value || ""}
                                         onChange={(url) => field.onChange(url)}
                                         endpoint="courseBanner"
+                                        page="Edit Course"
                                     />
                                 </FormControl>
                                 <FormMessage />

@@ -16,8 +16,10 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import toast from "react-hot-toast"
-import { PlusCircle } from "lucide-react"
+import { File, PlusCircle, X } from "lucide-react"
 import FileUpload from "@/components/custom/FileUpload"
+import { sendRequest } from "@/lib/api"
+import { useSession } from "next-auth/react"
 
 const formSchema = z.object({
     name: z.string().min(2, { message: "Title must be at least 2 characters" }),
@@ -31,6 +33,7 @@ interface ResourceFormProps {
 
 const ResourceForm = ({ section, courseId }: ResourceFormProps) => {
     const router = useRouter();
+    const { data: session } = useSession();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -42,14 +45,27 @@ const ResourceForm = ({ section, courseId }: ResourceFormProps) => {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            // const res = await axios.post(`/api/courses/${courseId}/sections`, values);
-            // if (res.status === 200) {
-            //     toast.success("New Section created!")
-            //     router.push(`/instructor/courses/${courseId}/sections/${res.data.id}`);
-            // }
+            const res = await sendRequest<IBackendRes<IResource>>({
+                url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/resources`,
+                method: 'POST',
+                body: {
+                    name: values.name,
+                    fileUrl: values.fileUrl,
+                    courseId: courseId,
+                    sectionId: section.id
+                },
+                headers: {
+                    Authorization: `Bearer ${session?.access_token}`
+                }
+            })
+            if (res?.data) {
+                toast.success("New Resource Uploaded!")
+                form.reset()
+                router.refresh()
+            }
         } catch (error) {
             toast.error("Something went wrong")
-            console.log("Failed to create new section", error)
+            console.log("Failed to upload resource", error)
         }
     }
 
@@ -63,41 +79,55 @@ const ResourceForm = ({ section, courseId }: ResourceFormProps) => {
                 Add resources to this section to help student learn better.
             </p>
 
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 my-5">
-                    <FormField
-                        control={form.control}
-                        name="name"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>File Name</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Ex: Textbook" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="fileUrl"
-                        render={({ field }) => (
-                            <FormItem className="flex flex-col">
-                                <FormLabel>Upload File</FormLabel>
-                                <FormControl>
-                                    <FileUpload
-                                        value={field.value || ""}
-                                        onChange={(url) => field.onChange(url)}
-                                        endpoint="sectionResource"
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <Button type="submit">Upload</Button>
-                </form>
-            </Form>
+            <div className="mt-5 flex flex-col gap-5">
+                {section.resources.map(resource => (
+                    <div className="flex justify-between bg-[#FFF8EB] rounded-lg text-sm font-medium p-3">
+                        <div className="flex items-center">
+                            <File className="h-4 w-4 mr-4" />
+                            {resource.name}
+                        </div>
+                        <button className="text-[#FDAB04]">
+                            <X className="h-4 w-4" />
+                        </button>
+                    </div>
+                ))}
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 my-5">
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>File Name</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Ex: Textbook" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="fileUrl"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                    <FormLabel>Upload File</FormLabel>
+                                    <FormControl>
+                                        <FileUpload
+                                            value={field.value || ""}
+                                            onChange={(url) => field.onChange(url)}
+                                            endpoint="sectionResource"
+                                            page="Edit Section"
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <Button type="submit">Upload</Button>
+                    </form>
+                </Form>
+            </div>
         </>
     )
 }

@@ -124,6 +124,7 @@ const EditSectionForm = ({ section, courseId, isCompleted }: EditSectionFormProp
                                         value={field.value || ""}
                                         onChange={(url) => field.onChange(url)}
                                         endpoint="sectionVideo"
+                                        page="Edit Section"
                                     />
                                 </FormControl>
                                 <FormMessage />
