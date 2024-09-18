@@ -32,7 +32,7 @@ const FileUpload = ({ value, onChange, endpoint, page }: FileUploadProps) => {
             }
             {page === "Edit Section" && value !== "" &&
                 (
-                    <p className="text-sm font-medium">{value}</p>
+                    <a href={value} target="_blank" className="text-sm font-medium hover:underline">{value}</a>
                 )
             }
         </div>

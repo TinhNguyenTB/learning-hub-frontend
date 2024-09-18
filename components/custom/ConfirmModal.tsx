@@ -33,7 +33,7 @@ const ConfirmModal = ({ open, setOpen, title, description, okButtonText = "Ok", 
                         {description}
                     </DialogDescription>
                 </DialogHeader>
-                <DialogFooter className="flex gap-2">
+                <DialogFooter>
                     <Button onClick={() => {
                         onOk()
                         setOpen(false)
