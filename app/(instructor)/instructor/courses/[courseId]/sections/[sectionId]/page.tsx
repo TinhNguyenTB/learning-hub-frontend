@@ -44,11 +44,14 @@ const SectionDetailPage = async ({ params }: { params: { courseId: string; secti
 
     return (
         <div className="px-10">
-            <EditSectionForm
-                section={section}
-                courseId={params.courseId}
-                isCompleted={isCompleted}
-            />
+            {session &&
+                <EditSectionForm
+                    session={session}
+                    section={section}
+                    courseId={params.courseId}
+                    isCompleted={isCompleted}
+                />
+            }
         </div>
     )
 }

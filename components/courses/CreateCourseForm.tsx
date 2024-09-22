@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation"
 import { sendRequest } from "@/lib/api"
 import toast from "react-hot-toast"
 import { Session } from "next-auth"
+import { Loader2 } from "lucide-react"
 
 const formSchema = z.object({
     title: z.string().min(2, { message: "Title must be at least 2 characters" }),
@@ -38,7 +39,6 @@ interface CreateCourseFormProps {
 }
 
 const CreateCourseForm = ({ categories, session }: CreateCourseFormProps) => {
-    console.log(categories)
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -49,6 +49,7 @@ const CreateCourseForm = ({ categories, session }: CreateCourseFormProps) => {
     })
 
     const router = useRouter();
+    const { isValid, isSubmitting } = form.formState
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
@@ -65,7 +66,7 @@ const CreateCourseForm = ({ categories, session }: CreateCourseFormProps) => {
                 }
             })
             if (res?.data) {
-                router.push(`/instructor/courses/${res.data.id}/basic`)
+                router.push(`/instructor/courses/${res.data.id}`)
                 toast.success("New Course Created")
             }
             else if (res?.error) {
@@ -125,7 +126,13 @@ const CreateCourseForm = ({ categories, session }: CreateCourseFormProps) => {
                             </FormItem>
                         )}
                     />
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit" disabled={!isValid || isSubmitting}>
+                        {isSubmitting ?
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            :
+                            "Create"
+                        }
+                    </Button>
                 </form>
             </Form>
         </div>

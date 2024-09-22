@@ -64,12 +64,6 @@ declare global {
         name: string
     }
 
-    interface IVideo {
-        id: string
-        url: string
-        sectionId: string
-    }
-
     interface IResource {
         id: string
         name: string
@@ -87,7 +81,6 @@ declare global {
         isFree: boolean
         courseId: string
         resources: IResource[]
-        video?: IVideo
     }
 
     interface IComment {

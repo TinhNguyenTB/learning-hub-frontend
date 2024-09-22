@@ -1,4 +1,5 @@
 "use client"
+
 import { Button } from "@/components/ui/button"
 import {
     Form,
@@ -17,9 +18,15 @@ import FileUpload from "@/components/custom/FileUpload"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import toast from "react-hot-toast"
-import { ArrowLeft, Trash } from "lucide-react"
+import { ArrowLeft, Trash, Loader2 } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
 import ResourceForm from "@/components/sections/ResourceForm"
+import ReactPlayer from 'react-player/lazy'
+import { useRef } from "react"
+import { Session } from "next-auth"
+import { sendRequest } from "@/lib/api"
+import { useHasMounted } from "@/lib/customHook"
+
 
 const formSchema = z.object({
     title: z.string().min(2, { message: "Title must be at least 2 characters" }),
@@ -32,9 +39,10 @@ interface EditSectionFormProps {
     section: ISection
     courseId: string
     isCompleted: boolean
+    session: Session
 }
 
-const EditSectionForm = ({ section, courseId, isCompleted }: EditSectionFormProps) => {
+const EditSectionForm = ({ section, courseId, isCompleted, session }: EditSectionFormProps) => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -46,19 +54,41 @@ const EditSectionForm = ({ section, courseId, isCompleted }: EditSectionFormProp
     })
 
     const router = useRouter();
+    const { isValid, isSubmitting } = form.formState
+    const videoRef = useRef<ReactPlayer | null>(null);
+    const isUploadedVideo = form.getValues("videoUrl");
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            // const response = await axios.patch(`/api/courses/${courseId}`, values);
-            // if (response.status === 200) {
-            //     toast.success("Course Updated!")
-            //     router.refresh()
-            // }
+            const { title, description, videoUrl, isFree } = values
+            const res = await sendRequest<IBackendRes<ISection>>({
+                url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/sections/${section.id}`,
+                method: 'PATCH',
+                body: {
+                    courseId,
+                    title,
+                    description,
+                    videoUrl,
+                    videoDuration: videoRef?.current?.getDuration()
+                },
+                headers: {
+                    Authorization: `Bearer ${session.access_token}`
+                }
+            })
+            if (res?.data) {
+                toast.success("Section Updated!")
+                router.refresh()
+            }
 
         } catch (error) {
-            console.log("Failed to update the course", error);
+            console.log("Failed to update the section", error);
             toast.error("Something went wrong")
         }
+    }
+
+    const hasMounted = useHasMounted();
+    if (!hasMounted) {
+        return <></>
     }
 
     return (
@@ -112,7 +142,6 @@ const EditSectionForm = ({ section, courseId, isCompleted }: EditSectionFormProp
                             </FormItem>
                         )}
                     />
-
                     <FormField
                         control={form.control}
                         name="videoUrl"
@@ -131,6 +160,26 @@ const EditSectionForm = ({ section, courseId, isCompleted }: EditSectionFormProp
                             </FormItem>
                         )}
                     />
+                    <div className="my-5">
+                        {section.videoUrl ?
+                            <ReactPlayer
+                                url={section?.videoUrl}
+                                className="md:max-w-[600px]"
+                                ref={videoRef}
+                                controls
+                            />
+                            :
+                            isUploadedVideo ?
+                                <ReactPlayer
+                                    url={form.getValues("videoUrl")}
+                                    className="md:max-w-[600px]"
+                                    ref={videoRef}
+                                    controls
+                                />
+                                :
+                                <></>
+                        }
+                    </div>
                     <FormField
                         control={form.control}
                         name="isFree"
@@ -156,7 +205,13 @@ const EditSectionForm = ({ section, courseId, isCompleted }: EditSectionFormProp
                         <Link href={`/instructor/courses/${courseId}/sections`}>
                             <Button variant="outline" type="button">Cancel</Button>
                         </Link>
-                        <Button type="submit">Save</Button>
+                        <Button type="submit" disabled={!isValid || isSubmitting}>
+                            {isSubmitting ?
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                                :
+                                "Save"
+                            }
+                        </Button>
                     </div>
                 </form>
             </Form>
