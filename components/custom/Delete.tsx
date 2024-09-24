@@ -21,7 +21,7 @@ import { Session } from "next-auth";
 interface DeleteProps {
     item: string;
     courseId: string;
-    sectionId: string;
+    sectionId?: string;
     session: Session
 }
 
@@ -32,7 +32,7 @@ const Delete = ({ item, courseId, sectionId, session }: DeleteProps) => {
     const onDelete = async () => {
         try {
             setIsDeleting(true);
-            const url = item === "course" ? `api/v1/courses/${courseId}` : `api/v1/sections/${sectionId}`
+            const url = item === "course" ? `api/v1/courses` : `api/v1/sections/${sectionId}`
             const res = await sendRequest<IBackendRes<any>>({
                 url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${url}`,
                 method: 'DELETE',

@@ -18,9 +18,9 @@ import FileUpload from "@/components/custom/FileUpload"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import toast from "react-hot-toast"
-import { Trash } from "lucide-react"
 import { sendRequest } from "@/lib/api"
 import { Session } from "next-auth"
+import Delete from "@/components/custom/Delete"
 
 const formSchema = z.object({
     title: z.string().min(2, { message: "Title must be at least 2 characters" }),
@@ -117,9 +117,11 @@ const EditCourseForm = ({ course, categories, levels, session }: EditCourseFormP
                 </div>
                 <div className="flex gap-4 items-start">
                     <Button variant={'outline'}>Publish</Button>
-                    <Button variant={'default'} className="bg-red-500 hover:bg-red-600">
-                        <Trash className="h-4 w-4" />
-                    </Button>
+                    <Delete
+                        session={session}
+                        item="course"
+                        courseId={course.id}
+                    />
                 </div>
             </div>
             <Form {...form}>
