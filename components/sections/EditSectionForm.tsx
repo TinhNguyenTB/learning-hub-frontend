@@ -18,7 +18,7 @@ import FileUpload from "@/components/custom/FileUpload"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import toast from "react-hot-toast"
-import { ArrowLeft, Trash, Loader2 } from "lucide-react"
+import { ArrowLeft, Loader2 } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
 import ResourceForm from "@/components/sections/ResourceForm"
 import ReactPlayer from 'react-player/lazy'
@@ -26,7 +26,7 @@ import { useRef } from "react"
 import { Session } from "next-auth"
 import { sendRequest } from "@/lib/api"
 import { useHasMounted } from "@/lib/customHook"
-
+import Delete from "@/components/custom/Delete"
 
 const formSchema = z.object({
     title: z.string().min(2, { message: "Title must be at least 2 characters" }),
@@ -102,9 +102,12 @@ const EditSectionForm = ({ section, courseId, isCompleted, session }: EditSectio
                 </Link>
                 <div className="flex gap-4 items-start">
                     <Button variant={'outline'}>Publish</Button>
-                    <Button variant={'default'} className="bg-red-500 hover:bg-red-600">
-                        <Trash className="h-4 w-4" />
-                    </Button>
+                    <Delete
+                        item="section"
+                        session={session}
+                        courseId={courseId}
+                        sectionId={section.id}
+                    />
                 </div>
             </div>
 
