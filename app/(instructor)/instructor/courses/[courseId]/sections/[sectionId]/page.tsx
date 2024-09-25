@@ -3,7 +3,7 @@ import EditSectionForm from "@/components/sections/EditSectionForm"
 import { sendRequest } from "@/lib/api";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-
+import AlertBanner from "@/components/custom/AlertBanner";
 
 const SectionDetailPage = async ({ params }: { params: { courseId: string; sectionId: string } }) => {
     const session = await getServerSession(authOptions);
@@ -40,10 +40,19 @@ const SectionDetailPage = async ({ params }: { params: { courseId: string; secti
         return redirect(`/instructor/courses/${params.courseId}/sections`)
     }
 
-    const isCompleted = false;
+    const requiredFields = [section.title, section.description, section.videoUrl];
+    const requiredFieldsCount = requiredFields.length;
+    const missingFields = requiredFields.filter(field => !Boolean(field));
+    const missingFieldsCount = missingFields.length;
+    const isCompleted = requiredFields.every(Boolean);
 
     return (
         <div className="px-10">
+            <AlertBanner
+                isCompleted={isCompleted}
+                requiredFieldsCount={requiredFieldsCount}
+                missingFieldCount={missingFieldsCount}
+            />
             {session &&
                 <EditSectionForm
                     session={session}

@@ -32,9 +32,9 @@ const Delete = ({ item, courseId, sectionId, session }: DeleteProps) => {
     const onDelete = async () => {
         try {
             setIsDeleting(true);
-            const url = item === "course" ? `api/v1/courses` : `api/v1/sections/${sectionId}`
+            const endpoint = item === "course" ? `api/v1/courses` : `api/v1/sections/${sectionId}`
             const res = await sendRequest<IBackendRes<any>>({
-                url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${url}`,
+                url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${endpoint}`,
                 method: 'DELETE',
                 body: {
                     courseId

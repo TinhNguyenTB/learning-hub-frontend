@@ -27,6 +27,8 @@ import { Session } from "next-auth"
 import { sendRequest } from "@/lib/api"
 import { useHasMounted } from "@/lib/customHook"
 import Delete from "@/components/custom/Delete"
+import RichEditor from "@/components/custom/RichEditor"
+import PublishButton from "@/components/custom/PublishButton"
 
 const formSchema = z.object({
     title: z.string().min(2, { message: "Title must be at least 2 characters" }),
@@ -92,7 +94,7 @@ const EditSectionForm = ({ section, courseId, isCompleted, session }: EditSectio
     }
 
     return (
-        <div className="py-8">
+        <div className="pb-8 pt-3">
             <div className="flex flex-col gap-2 sm:flex-row sm:justify-between mb-7">
                 <Link href={`/instructor/courses/${courseId}/sections`}>
                     <Button variant={'outline'} className="text-sm font-medium">
@@ -101,7 +103,14 @@ const EditSectionForm = ({ section, courseId, isCompleted, session }: EditSectio
                     </Button>
                 </Link>
                 <div className="flex gap-4 items-start">
-                    <Button variant={'outline'}>Publish</Button>
+                    <PublishButton
+                        disabled={!isCompleted}
+                        courseId={courseId}
+                        sectionId={section.id}
+                        isPublished={section.isPublished}
+                        page="Section"
+                        session={session}
+                    />
                     <Delete
                         item="section"
                         session={session}
@@ -124,7 +133,9 @@ const EditSectionForm = ({ section, courseId, isCompleted, session }: EditSectio
                         name="title"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Title</FormLabel>
+                                <FormLabel>
+                                    <span className="text-red-500">*</span> Title
+                                </FormLabel>
                                 <FormControl>
                                     <Input {...field} />
                                 </FormControl>
@@ -137,9 +148,14 @@ const EditSectionForm = ({ section, courseId, isCompleted, session }: EditSectio
                         name="description"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Description</FormLabel>
+                                <FormLabel>
+                                    <span className="text-red-500">*</span> Description
+                                </FormLabel>
                                 <FormControl>
-                                    <Input placeholder="What is this section about?" {...field} />
+                                    <RichEditor
+                                        placeholder="What is this section about?"
+                                        {...field}
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -150,7 +166,9 @@ const EditSectionForm = ({ section, courseId, isCompleted, session }: EditSectio
                         name="videoUrl"
                         render={({ field }) => (
                             <FormItem className="flex flex-col">
-                                <FormLabel>Video</FormLabel>
+                                <FormLabel>
+                                    <span className="text-red-500">*</span> Video
+                                </FormLabel>
                                 <FormControl>
                                     <FileUpload
                                         value={field.value || ""}
