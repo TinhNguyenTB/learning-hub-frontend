@@ -1,4 +1,6 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { columns } from '@/components/courses/Columns';
+import { DataTable } from '@/components/custom/DataTable';
 import { Button } from '@/components/ui/button';
 import { sendRequest } from '@/lib/api';
 import { getServerSession } from 'next-auth';
@@ -19,18 +21,17 @@ const CoursesPage = async () => {
         courses = res.data.result
     }
     return (
-        <div className='px-6 py-4'>
+        <div className='px-6 py-8'>
             <Link href={"create-course"}>
                 <Button>Create New Course</Button>
             </Link>
-            <div className='mt-10'>
-                {courses?.map(item => {
-                    return (
-                        <Link key={item.id} href={`/instructor/courses/${item.id}`}>
-                            {item.title}
-                        </Link>
-                    )
-                })}
+            <div className='mt-5'>
+                {courses &&
+                    <DataTable
+                        columns={columns}
+                        data={courses}
+                    />
+                }
             </div>
         </div>
     )

@@ -57,6 +57,7 @@ declare global {
         comments?: IComment[]
         ratings?: IRating[]
         averageRating?: number
+        statusName: string
     }
 
     interface ILevel {
