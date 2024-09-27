@@ -42,11 +42,18 @@ const CourseBasics = async ({ params }: { params: { courseId: string } }) => {
         return redirect('/instructor/courses');
     }
 
+    const requiredFields = [
+        course.title, course.description, course.categoryId, course.imageUrl,
+        course.subCategoryId, course.levelId, course.price
+    ]
+    const isCompleted = requiredFields.every(Boolean)
+
     return (
         <div className="px-10">
             {course && categories && levels && session &&
                 <EditCourseForm
                     session={session}
+                    isCompleted={isCompleted}
                     course={course}
                     categories={categories?.map(category => ({
                         label: category.name,

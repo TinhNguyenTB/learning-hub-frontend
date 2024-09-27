@@ -21,6 +21,9 @@ import toast from "react-hot-toast"
 import { sendRequest } from "@/lib/api"
 import { Session } from "next-auth"
 import Delete from "@/components/custom/Delete"
+import { Loader2 } from "lucide-react"
+import PublishButton from "@/components/custom/PublishButton"
+import { useHasMounted } from "@/lib/customHook"
 
 const formSchema = z.object({
     title: z.string().min(2, { message: "Title must be at least 2 characters" }),
@@ -48,9 +51,10 @@ interface EditCourseFormProps {
         label: string; // name of level
     }[]
     session: Session
+    isCompleted: boolean
 }
 
-const EditCourseForm = ({ course, categories, levels, session }: EditCourseFormProps) => {
+const EditCourseForm = ({ course, categories, levels, session, isCompleted }: EditCourseFormProps) => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -67,6 +71,7 @@ const EditCourseForm = ({ course, categories, levels, session }: EditCourseFormP
 
     const router = useRouter();
     const pathname = usePathname();
+    const { isValid, isSubmitting } = form.formState
 
     const routes = [
         { label: "Basic Information", path: `/instructor/courses/${course.id}` },
@@ -98,6 +103,11 @@ const EditCourseForm = ({ course, categories, levels, session }: EditCourseFormP
         }
     }
 
+    const hasMounted = useHasMounted();
+    if (!hasMounted) {
+        return <></>
+    }
+
     return (
         <div className="py-8">
             <div className="flex flex-col gap-2 sm:flex-row sm:justify-between mb-7">
@@ -116,7 +126,13 @@ const EditCourseForm = ({ course, categories, levels, session }: EditCourseFormP
                     })}
                 </div>
                 <div className="flex gap-4 items-start">
-                    <Button variant={'outline'}>Publish</Button>
+                    <PublishButton
+                        session={session}
+                        disabled={!isCompleted}
+                        courseId={course.id}
+                        isPublished={course.isPublished}
+                        page="Course"
+                    />
                     <Delete
                         session={session}
                         item="course"
@@ -131,7 +147,7 @@ const EditCourseForm = ({ course, categories, levels, session }: EditCourseFormP
                         name="title"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Title</FormLabel>
+                                <FormLabel><span className="text-red-500">*</span> Title</FormLabel>
                                 <FormControl>
                                     <Input {...field} />
                                 </FormControl>
@@ -157,7 +173,7 @@ const EditCourseForm = ({ course, categories, levels, session }: EditCourseFormP
                         name="description"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Description</FormLabel>
+                                <FormLabel><span className="text-red-500">*</span> Description</FormLabel>
                                 <FormControl>
                                     <RichEditor
                                         placeholder="What is this course about?"
@@ -174,7 +190,7 @@ const EditCourseForm = ({ course, categories, levels, session }: EditCourseFormP
                             name="categoryId"
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
-                                    <FormLabel>Category</FormLabel>
+                                    <FormLabel><span className="text-red-500">*</span> Category</FormLabel>
                                     <FormControl>
                                         <Combobox options={categories} {...field} />
                                     </FormControl>
@@ -187,7 +203,7 @@ const EditCourseForm = ({ course, categories, levels, session }: EditCourseFormP
                             name="subCategoryId"
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
-                                    <FormLabel>SubCategory</FormLabel>
+                                    <FormLabel><span className="text-red-500">*</span> SubCategory</FormLabel>
                                     <FormControl>
                                         <Combobox
                                             options={categories.find(category => category.value === form.watch('categoryId'))?.subCategories || []}
@@ -203,7 +219,7 @@ const EditCourseForm = ({ course, categories, levels, session }: EditCourseFormP
                             name="levelId"
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
-                                    <FormLabel>Level</FormLabel>
+                                    <FormLabel><span className="text-red-500">*</span> Level</FormLabel>
                                     <FormControl>
                                         <Combobox options={levels} {...field} />
                                     </FormControl>
@@ -217,7 +233,7 @@ const EditCourseForm = ({ course, categories, levels, session }: EditCourseFormP
                         name="price"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Price ($)</FormLabel>
+                                <FormLabel><span className="text-red-500">*</span> Price ($)</FormLabel>
                                 <FormControl>
                                     <Input
                                         placeholder="Ex: 22.8" {...field}
@@ -234,7 +250,7 @@ const EditCourseForm = ({ course, categories, levels, session }: EditCourseFormP
                         name="imageUrl"
                         render={({ field }) => (
                             <FormItem className="flex flex-col">
-                                <FormLabel>Course Banner</FormLabel>
+                                <FormLabel><span className="text-red-500">*</span> Course Banner</FormLabel>
                                 <FormControl>
                                     <FileUpload
                                         value={field.value || ""}
@@ -252,7 +268,13 @@ const EditCourseForm = ({ course, categories, levels, session }: EditCourseFormP
                         <Link href={"/instructor/courses"}>
                             <Button variant="outline" type="button">Cancel</Button>
                         </Link>
-                        <Button type="submit">Save</Button>
+                        <Button type="submit" disabled={!isValid || isSubmitting}>
+                            {isSubmitting ?
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                                :
+                                "Save"
+                            }
+                        </Button>
                     </div>
                 </form>
             </Form>

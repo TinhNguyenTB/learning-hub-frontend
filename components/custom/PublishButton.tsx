@@ -11,7 +11,7 @@ import { Session } from "next-auth"
 interface PublishButtonProps {
     disabled: boolean
     courseId: string
-    sectionId: string
+    sectionId?: string
     isPublished: boolean
     page: string
     session: Session
@@ -22,7 +22,7 @@ const PublishButton = ({ disabled, courseId, sectionId, isPublished, page, sessi
     const router = useRouter();
 
     const handleClick = async () => {
-        let endpoint = `/api/v1/courses/publish`
+        let endpoint = `api/v1/courses/publish`
         if (page === "Section") {
             endpoint = `api/v1/sections/publish`
         }
@@ -43,6 +43,9 @@ const PublishButton = ({ disabled, courseId, sectionId, isPublished, page, sessi
             if (res?.data) {
                 toast.success(`${page} ${isPublished ? "unpublished" : "published"}`);
                 router.refresh()
+            }
+            else if (res.error) {
+                toast.error(res.message);
             }
         } catch (error) {
             toast.error("Something went wrong!")
