@@ -11,7 +11,7 @@ const CourseBasics = async ({ params }: { params: { courseId: string } }) => {
     let course;
     let levels;
 
-    const resCategories = await sendRequest<IBackendRes<ICategory<ISubcategory[]>[]>>({
+    const resCategories = await sendRequest<IBackendRes<ICategory[]>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/categories`,
         method: 'GET',
     })

@@ -10,15 +10,15 @@ const CoursesPage = async () => {
     let courses;
     const session = await getServerSession(authOptions)
 
-    const res = await sendRequest<IBackendRes<IModelPaginate<ICourse>>>({
-        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/courses`,
+    const res = await sendRequest<IBackendRes<ICourse[]>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/courses/instructor`,
         method: 'GET',
         headers: {
             Authorization: `Bearer ${session?.access_token}`
         }
     })
     if (res?.data) {
-        courses = res.data.result
+        courses = res.data
     }
     return (
         <div className='px-6 py-8'>

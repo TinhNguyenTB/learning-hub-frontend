@@ -1,3 +1,4 @@
+
 export { };
 // https://bobbyhadz.com/blog/typescript-make-types-global#declare-global-types-in-typescript
 
@@ -29,7 +30,7 @@ declare global {
         result: T[]
     }
 
-    interface ICategory<subCategory> {
+    interface ICategory {
         id: string
         name: string
         subCategories: ISubcategory[]
