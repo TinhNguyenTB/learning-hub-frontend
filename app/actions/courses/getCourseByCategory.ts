@@ -1,13 +1,14 @@
 import { sendRequest } from "@/lib/api"
 
-const getCoursesByCategory = async (categoryId: string | null) => {
+const getCoursesByCategory = async (categoryId: string | null, current?: string, pageSize?: string) => {
 
     const res = await sendRequest<IBackendRes<IModelPaginate<ICourse>>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/courses`,
         method: 'GET',
         queryParams: {
             categoryId,
-
+            current,
+            pageSize
         }
     })
     if (res?.data) {

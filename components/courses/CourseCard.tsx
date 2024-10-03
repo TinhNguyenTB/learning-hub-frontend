@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import getLevelById from "@/app/actions/levels/getLevelById";
 import getUserById from "@/app/actions/users/getUserById";
+import Ratings from "../custom/Rating";
 
 interface CourseCardProps {
     course: ICourse
@@ -18,10 +19,10 @@ const CourseCard = async ({ course }: CourseCardProps) => {
             <Image src={course.imageUrl ?? "/image_placeholder.webp"} alt={course.title}
                 width={500}
                 height={300}
-                className="rounded-t-lg w-[320px] h-[180px] object-cover"
+                className="rounded-t-lg w-full h-[180px] object-cover"
             />
             <div className="px-4 py-3 flex flex-col gap-2">
-                <h2 className="text-lg font-semibold hover:text-[#FDAB04]">{course.title}</h2>
+                <span className="text-lg font-semibold">{course.title}</span>
                 <div className="text-sm font-medium">
                     {instructor &&
                         <div className="flex gap-2 items-center">
@@ -38,6 +39,7 @@ const CourseCard = async ({ course }: CourseCardProps) => {
                         </div>
                     }
                 </div>
+                <Ratings rating={course.averageRating!} variant="yellow" />
                 <div className="flex justify-between items-center">
                     <p className="text-lg font-semibold">$ {course.price}</p>
                     {level &&

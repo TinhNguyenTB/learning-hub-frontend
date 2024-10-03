@@ -10,11 +10,11 @@ const ratingVariants = {
     },
     destructive: {
         star: "text-red-500",
-        emptyStar: "text-red-200",
+        emptyStar: "text-red-400",
     },
     yellow: {
         star: "text-yellow-500",
-        emptyStar: "text-yellow-200",
+        emptyStar: "text-yellow-400",
     },
 }
 
