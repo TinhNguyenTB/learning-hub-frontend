@@ -11,7 +11,7 @@ interface CategoriesProps {
 const Categories = ({ categories, selectedCategory }: CategoriesProps) => {
     const router = useRouter();
     const handleClick = (categoryId: string | null) => {
-        router.push(categoryId ? `/categories/${categoryId}?current=1&pageSize=2` : '/')
+        router.push(categoryId ? `/categories/${categoryId}?current=1&pageSize=1` : '/')
     }
 
     return (

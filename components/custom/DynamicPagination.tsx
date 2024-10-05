@@ -24,9 +24,6 @@ const DynamicPagination = ({
     totalPagesToDisplay = 5
 }: DynamicPaginationProps) => {
 
-    // Create an array of page numbers [1, 2, ..., pages]
-    const pageNumbers = pages ? Array.from({ length: pages }, (_, i) => i + 1) : [];
-
     const showLeftEllipsis = current - 1 > totalPagesToDisplay / 2;
     const showRightEllipsis = pages - current + 1 > totalPagesToDisplay / 2;
 

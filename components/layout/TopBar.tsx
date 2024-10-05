@@ -6,7 +6,8 @@ import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import UserButton from "@/components/auth/UserButton"
-
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 const TopBar = () => {
     const { data: session } = useSession()
@@ -14,6 +15,15 @@ const TopBar = () => {
         { label: "Instructor", path: "/instructor/courses" },
         { label: "Learning", path: "/learning" }
     ]
+
+    const router = useRouter();
+    const [searchInput, setSearchInput] = useState<string>("");
+    const handleSearch = () => {
+        if (searchInput.trim() !== "") {
+            router.push(`/search?query=${searchInput}&current=1&pageSize=8`)
+        }
+        setSearchInput("")
+    }
 
     return (
         <div className="flex justify-between items-center p-4 shadow">
@@ -23,8 +33,13 @@ const TopBar = () => {
             <div className="max-md:hidden w-[400px] rounded-full flex ">
                 <input className="flex-grow bg-[#F5F5F5] rounded-l-full border-none outline-none text-sm pl-4 py-3"
                     placeholder="Search for courses"
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
                 />
-                <button className="bg-black/80 rounded-r-full border-none outline-none cursor-pointer px-4 py-3 hover:bg-black">
+                <button className="bg-black/80 rounded-r-full border-none outline-none cursor-pointer px-4 py-3 hover:bg-black"
+                    disabled={searchInput.trim() === ""}
+                    onClick={() => handleSearch()}
+                >
                     <SearchIcon className="h-4 w-4 text-white" />
                 </button>
             </div>
