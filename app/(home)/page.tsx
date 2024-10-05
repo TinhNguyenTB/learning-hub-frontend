@@ -1,4 +1,4 @@
-import getCoursesByCategory from "@/app/actions/courses/getCourseByCategory";
+import getCoursesByCategory from "@/app/actions/courses/getCoursesByCategory";
 import Categories from "@/components/custom/Categories";
 import CourseCard from "@/components/courses/CourseCard";
 import getCategories from "@/app/actions/categories/getCategories";

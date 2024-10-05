@@ -35,6 +35,10 @@ const TopBar = () => {
                     placeholder="Search for courses"
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter")
+                            handleSearch();
+                    }}
                 />
                 <button className="bg-black/80 rounded-r-full border-none outline-none cursor-pointer px-4 py-3 hover:bg-black"
                     disabled={searchInput.trim() === ""}

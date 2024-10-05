@@ -19,7 +19,7 @@ const CourseCard = async ({ course }: CourseCardProps) => {
             <Image src={course.imageUrl ?? "/image_placeholder.webp"} alt={course.title}
                 width={500}
                 height={300}
-                className="rounded-t-lg w-full h-[180px] object-cover"
+                className="rounded-t-lg w-full h-[200px] object-cover"
             />
             <div className="px-4 py-3 flex flex-col gap-2">
                 <span className="text-lg font-semibold">{course.title}</span>
