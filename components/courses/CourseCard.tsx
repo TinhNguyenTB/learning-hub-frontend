@@ -2,16 +2,14 @@ import { Gem } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import getLevelById from "@/app/actions/levels/getLevelById";
 import getUserById from "@/app/actions/users/getUserById";
-import Ratings from "../custom/Rating";
+import Ratings from "@/components/custom/Rating";
 
 interface CourseCardProps {
     course: ICourse
 }
 const CourseCard = async ({ course }: CourseCardProps) => {
 
-    const level = await getLevelById(course.levelId)
     const instructor = await getUserById(course.instructorId)
 
     return (
@@ -42,10 +40,10 @@ const CourseCard = async ({ course }: CourseCardProps) => {
                 <Ratings rating={course.averageRating!} variant="yellow" />
                 <div className="flex justify-between items-center">
                     <p className="text-lg font-semibold">$ {course.price}</p>
-                    {level &&
+                    {course.level &&
                         <div className="flex gap-1 items-center">
                             <Gem size={20} />
-                            <p>{level.name}</p>
+                            <p>{course.level.name}</p>
                         </div>
                     }
                 </div>

@@ -50,10 +50,18 @@ declare global {
         imageUrl: string
         price: number
         isPublished: boolean
+        instructor: {
+            name: string,
+            id: string
+        }
         instructorId: string
         categoryId: string
         subCategoryId: string
         levelId: string
+        level: {
+            name: string,
+            id: string
+        }
         sections: ISection[]
         comments?: IComment[]
         ratings?: IRating[]
