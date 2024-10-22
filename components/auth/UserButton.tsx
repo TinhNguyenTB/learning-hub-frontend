@@ -51,6 +51,7 @@ const UserButton = ({ user }: { user: IUser }) => {
                 <DropdownMenuItem onClick={() => signOut()} className="flex items-center gap-2">
                     <FaSignOutAlt className="h-5 w-5" />
                     <p>Sign out</p>
+                    {/* <Link href={"/api/auth/signout"}>Sign out</Link> */}
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
