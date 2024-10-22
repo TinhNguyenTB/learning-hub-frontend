@@ -24,8 +24,7 @@ const UserButton = ({ user }: { user: IUser }) => {
             <DropdownMenuTrigger>
                 <Avatar>
                     <AvatarImage
-                        src={user.accountType !== process.env.NEXT_PUBLIC_ACCOUNT_DEFAULT
-                            ? user.image : ``}
+                        src={user?.image ?? ""}
                     />
                     <AvatarFallback className="uppercase font-bold bg-black text-white">
                         {user?.name?.slice(0, 1)}

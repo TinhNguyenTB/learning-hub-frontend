@@ -54,7 +54,7 @@ export const authOptions: AuthOptions = {
                     url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/social-media`,
                     method: 'POST',
                     body: {
-                        accountType: account?.provider.toUpperCase(),
+                        // accountType: account?.provider.toUpperCase(),
                         name: user.name ?? user.email,
                         email: user.email,
                         image: user.image

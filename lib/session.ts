@@ -11,7 +11,6 @@ export type Session = {
         email: string
         image: string
         role: string
-        accountType: string
         isActive: boolean
     },
     access_token: string
@@ -47,7 +46,7 @@ export async function getSession() {
         return payload as Session
     } catch (error) {
         console.error("Failed to verify the session", error)
-        redirect("/signin")
+        redirect("/sign-in")
     }
 }
 

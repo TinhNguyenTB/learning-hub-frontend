@@ -26,8 +26,7 @@ const CourseCard = async ({ course }: CourseCardProps) => {
                         <div className="flex gap-2 items-center">
                             <Avatar>
                                 <AvatarImage
-                                    src={instructor.accountType !== process.env.NEXT_PUBLIC_ACCOUNT_DEFAULT
-                                        ? instructor.image : ``}
+                                    src={instructor?.image ?? ``}
                                 />
                                 <AvatarFallback className="uppercase font-bold bg-black text-white">
                                     {instructor?.name?.slice(0, 1)}

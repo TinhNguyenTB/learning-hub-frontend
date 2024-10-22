@@ -7,7 +7,6 @@ interface IUser {
     email: string
     image: string
     role: string
-    accountType: string
     isActive: boolean
 }
 
