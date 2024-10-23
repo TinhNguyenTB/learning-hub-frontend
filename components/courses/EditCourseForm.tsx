@@ -19,11 +19,11 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import toast from "react-hot-toast"
 import { sendRequest } from "@/lib/api"
-import { Session } from "next-auth"
 import Delete from "@/components/custom/Delete"
 import { Loader2 } from "lucide-react"
 import PublishButton from "@/components/custom/PublishButton"
 import { useHasMounted } from "@/lib/customHook"
+import { Session } from "@/lib/session"
 
 const formSchema = z.object({
     title: z.string().min(2, { message: "Title must be at least 2 characters" }),

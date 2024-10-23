@@ -17,9 +17,8 @@ import {
 import { Input } from "@/components/ui/input"
 import toast from "react-hot-toast"
 import { sendRequest } from "@/lib/api"
-import { Session } from "next-auth"
 import SectionList from "@/components/sections/SectionList"
-
+import { Session } from "@/lib/session"
 
 const formSchema = z.object({
     title: z.string().min(2, { message: "Title must be at least 2 characters" }),

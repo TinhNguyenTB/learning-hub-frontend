@@ -1,5 +1,5 @@
 import { sendRequest } from "@/lib/api"
-import { IUser } from "@/types/next-auth"
+import { IUser } from "@/lib/session"
 
 
 const getUserById = async (id: string) => {

@@ -23,12 +23,12 @@ import { Switch } from "@/components/ui/switch"
 import ResourceForm from "@/components/sections/ResourceForm"
 import ReactPlayer from 'react-player/lazy'
 import { useRef } from "react"
-import { Session } from "next-auth"
 import { sendRequest } from "@/lib/api"
 import { useHasMounted } from "@/lib/customHook"
 import Delete from "@/components/custom/Delete"
 import RichEditor from "@/components/custom/RichEditor"
 import PublishButton from "@/components/custom/PublishButton"
+import { Session } from "@/lib/session"
 
 const formSchema = z.object({
     title: z.string().min(2, { message: "Title must be at least 2 characters" }),

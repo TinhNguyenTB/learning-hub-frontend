@@ -1,14 +1,13 @@
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { columns } from '@/components/courses/Columns';
 import { DataTable } from '@/components/custom/DataTable';
 import { Button } from '@/components/ui/button';
 import { sendRequest } from '@/lib/api';
-import { getServerSession } from 'next-auth';
+import { getSession } from '@/lib/session';
 import Link from 'next/link';
 
 const CoursesPage = async () => {
     let courses;
-    const session = await getServerSession(authOptions)
+    const session = await getSession()
 
     const res = await sendRequest<IBackendRes<ICourse[]>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/courses/instructor`,

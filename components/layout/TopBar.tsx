@@ -1,16 +1,24 @@
 'use client'
 
-import { useSession } from "next-auth/react"
+import { getSession, Session } from "@/lib/session"
 import { SearchIcon } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import UserButton from "@/components/auth/UserButton"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 
 const TopBar = () => {
-    const { data: session } = useSession()
+    const [session, setSession] = useState<Session | null>(null);
+    useEffect(() => {
+        const fetchSession = async () => {
+            const sessionData = await getSession();
+            setSession(sessionData);
+        };
+        fetchSession();
+    }, []);
+
     const topRoutes = [
         { label: "Instructor", path: "/instructor/courses" },
         { label: "Learning", path: "/learning" }

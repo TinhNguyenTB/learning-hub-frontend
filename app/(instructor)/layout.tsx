@@ -1,11 +1,10 @@
 import TopBar from '@/components/layout/TopBar'
 import Sidebar from '@/components/layout/Sidebar'
-import { getServerSession } from 'next-auth'
+import { getSession } from '@/lib/session'
 import { redirect } from 'next/navigation'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 
 const InstructorLayout = async ({ children }: { children: React.ReactNode }) => {
-    const session = await getServerSession(authOptions)
+    const session = await getSession()
     if (!session) {
         return redirect('/sign-in')
     }

@@ -1,6 +1,5 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import SignUpForm from "@/components/auth/SignUpForm"
-import { getServerSession } from "next-auth"
+import { getSession } from "@/lib/session"
 import { redirect } from "next/navigation"
 import type { Metadata } from 'next'
 
@@ -10,7 +9,7 @@ export const metadata: Metadata = {
 }
 
 const SignUpPage = async () => {
-    const session = await getServerSession(authOptions)
+    const session = await getSession()
     if (session) {
         return redirect('/')
     }

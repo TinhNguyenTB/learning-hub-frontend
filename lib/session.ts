@@ -4,15 +4,16 @@ import { jwtVerify, SignJWT } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+export type IUser = {
+    name: string
+    id: string
+    email: string
+    image: string
+    role: string
+    isActive: boolean
+}
 export type Session = {
-    user: {
-        name: string
-        id: string
-        email: string
-        image: string
-        role: string
-        isActive: boolean
-    },
+    user: IUser,
     access_token: string
     refresh_token: string
 }

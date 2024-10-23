@@ -1,12 +1,11 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import EditCourseForm from "@/components/courses/EditCourseForm"
 import { sendRequest } from "@/lib/api";
-import { getServerSession } from "next-auth";
+import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 
 
 const CourseBasics = async ({ params }: { params: { courseId: string } }) => {
-    const session = await getServerSession(authOptions);
+    const session = await getSession();
     let categories;
     let course;
     let levels;

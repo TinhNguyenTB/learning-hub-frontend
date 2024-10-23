@@ -1,12 +1,11 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import CreateCourseForm from "@/components/courses/CreateCourseForm"
 import { sendRequest } from "@/lib/api"
-import { getServerSession } from "next-auth";
+import { getSession } from "@/lib/session";
 
 const CreateCoursePage = async () => {
     let categories;
 
-    const res = await sendRequest<IBackendRes<ICategory<ISubcategory[]>[]>>({
+    const res = await sendRequest<IBackendRes<ICategory[]>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/categories`,
         method: 'GET',
     })
@@ -14,7 +13,7 @@ const CreateCoursePage = async () => {
         categories = res.data
     }
 
-    const session = await getServerSession(authOptions)
+    const session = await getSession()
 
     return (
         <>

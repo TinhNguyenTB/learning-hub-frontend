@@ -23,9 +23,11 @@ export async function signIn(email: string, password: string) {
         })
         redirect("/")
     }
-    else {
+    else if (response.error) {
         return {
-            message: response.statusCode === 401 ? "Invalid Credential" : response.message
+            error: response.error,
+            message: response.message,
+            statusCode: response.statusCode
         }
     }
 }

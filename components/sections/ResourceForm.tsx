@@ -18,8 +18,8 @@ import toast from "react-hot-toast"
 import { File, PlusCircle, X, Loader2 } from "lucide-react"
 import FileUpload from "@/components/custom/FileUpload"
 import { sendRequest } from "@/lib/api"
-import { useSession } from "next-auth/react"
-import { useState } from "react"
+import { getSession, Session } from "@/lib/session"
+import { useEffect, useState } from "react"
 import ConfirmModal from "@/components/custom/ConfirmModal"
 
 const formSchema = z.object({
@@ -34,7 +34,15 @@ interface ResourceFormProps {
 
 const ResourceForm = ({ section, courseId }: ResourceFormProps) => {
     const router = useRouter();
-    const { data: session } = useSession();
+    const [session, setSession] = useState<Session | null>(null);
+    useEffect(() => {
+        const fetchSession = async () => {
+            const sessionData = await getSession();
+            setSession(sessionData);
+        };
+        fetchSession();
+    }, []);
+
     const [openConfirmModal, setOpenConfirmModal] = useState<boolean>(false);
     const [resourceId, setResourceId] = useState<string>("");
 

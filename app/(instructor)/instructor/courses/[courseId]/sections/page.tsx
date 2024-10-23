@@ -1,11 +1,10 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import CreateSectionForm from "@/components/sections/CreateSectionForm"
 import { sendRequest } from "@/lib/api";
-import { getServerSession } from "next-auth";
+import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 
 const CourseCurriculumPage = async ({ params }: { params: { courseId: string } }) => {
-    const session = await getServerSession(authOptions);
+    const session = await getSession();
 
     let course;
     const res = await sendRequest<IBackendRes<ICourse>>({

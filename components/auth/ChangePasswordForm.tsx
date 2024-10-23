@@ -16,9 +16,7 @@ import Link from "next/link"
 import { PasswordInput } from "@/components/custom/PasswordInput"
 import { sendRequest } from "@/lib/api"
 import toast from "react-hot-toast"
-import { signOut } from "next-auth/react"
-import { Session } from "next-auth"
-
+import { Session } from "@/lib/session"
 
 const formSchema = z.object({
     oldPassword: z.string({
@@ -59,7 +57,7 @@ const ChangePasswordForm = ({ session }: { session: Session }) => {
         if (res?.data) {
             toast.success("Password changed successfully")
             form.reset()
-            signOut()
+            fetch("/api/auth/signout")
         }
         else if (res?.error) {
             toast.error(res?.message)

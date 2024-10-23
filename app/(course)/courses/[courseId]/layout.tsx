@@ -1,8 +1,7 @@
 import getCourseByIdForStudent from "@/app/actions/courses/getCourseByIdForStudent";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import CourseSideBar from "@/components/layout/CourseSideBar";
 import TopBar from "@/components/layout/TopBar";
-import { getServerSession } from "next-auth";
+import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 
 const CourseDetailLayout = async ({
@@ -12,7 +11,7 @@ const CourseDetailLayout = async ({
     params: { courseId: string }
 }) => {
 
-    const session = await getServerSession(authOptions)
+    const session = await getSession()
     if (!session) {
         return redirect('/sign-in')
     }

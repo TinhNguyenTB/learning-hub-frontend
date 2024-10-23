@@ -9,8 +9,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { IUser } from "@/types/next-auth"
-import { signOut } from "next-auth/react"
+import { IUser } from "@/lib/session"
 import { FaAddressCard, FaSignOutAlt } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
 import Link from "next/link"
@@ -47,10 +46,11 @@ const UserButton = ({ user }: { user: IUser }) => {
                     </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => signOut()} className="flex items-center gap-2">
-                    <FaSignOutAlt className="h-5 w-5" />
-                    <p>Sign out</p>
-                    {/* <Link href={"/api/auth/signout"}>Sign out</Link> */}
+                <DropdownMenuItem>
+                    <Link href={"/api/auth/signout"} className="flex items-center gap-2">
+                        <FaSignOutAlt className="h-5 w-5" />
+                        <p>Sign out</p>
+                    </Link>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

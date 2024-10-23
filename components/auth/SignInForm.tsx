@@ -13,12 +13,9 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { FaGoogle, FaGithub } from "react-icons/fa";
-import TooltipCustom from "@/components/custom/Tooltip.custom"
-import { Separator } from "@/components/ui/separator"
+import { FaGoogle } from "react-icons/fa";
 import Link from "next/link"
 import { PasswordInput } from "@/components/custom/PasswordInput"
-import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import toast from "react-hot-toast"
 import { useState } from "react"
@@ -26,6 +23,8 @@ import ForgotPasswordModal from "@/components/auth/ForgotPasswordModal"
 import ActivateModal from "@/components/auth/ActivateModal"
 import ConfirmModal from "@/components/custom/ConfirmModal"
 import { sendRequest } from "@/lib/api"
+import { signIn } from "@/lib/auth"
+
 
 const formSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
@@ -33,7 +32,6 @@ const formSchema = z.object({
         required_error: "Password is required"
     }).trim().min(1, "Password must contain at least 1 character")
 })
-
 
 const SignInForm = () => {
     const form = useForm<z.infer<typeof formSchema>>({
@@ -52,18 +50,13 @@ const SignInForm = () => {
     const [userId, setUserId] = useState<string>("");
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        const res = await signIn("credentials", {
-            username: values.email,
-            password: values.password,
-            redirect: false
-        })
+        const res = await signIn(values.email, values.password)
         if (!res?.error) {
             // redirect to home
             router.push("/")
         }
         else {
-            const errorResponse = JSON.parse(res.error)
-            const { message, statusCode } = errorResponse
+            const { message, statusCode } = res
             if (statusCode === 403) {
                 setUserEmail(values.email)
                 setOpenConfirmModal(true)
@@ -153,20 +146,12 @@ const SignInForm = () => {
                         onClick={() => setOpenModalForgotPass(true)}>
                         Forgot password?
                     </p>
-                    <Separator className="my-4" />
-                    <p className="text-center">Or sign in with</p>
-                    <div className="flex gap-6 items-center justify-center my-4">
-                        <TooltipCustom
-                            trigger={<FaGithub className="h-8 w-8"
-                                onClick={() => signIn("github")}
-                            />}
-                            content="Sign in with Github"
-                        />
-                        <TooltipCustom
-                            trigger={<FaGoogle className="h-8 w-8 text-red-600" />}
-                            content="Sign in with Google"
-                        />
-                    </div>
+                    <Link href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/google/login`} >
+                        <Button className="w-full my-4" variant={"outline"}>
+                            <FaGoogle className="mr-2 h-5 w-5 text-red-600" />
+                            Sign in with google
+                        </Button>
+                    </Link>
                     <div className="text-center">
                         Don't have an account?
                         <Link href={'/sign-up'} className="hover:text-blue-600 hover:underline"> Sign up now</Link>

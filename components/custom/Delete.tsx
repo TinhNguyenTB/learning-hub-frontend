@@ -16,7 +16,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { sendRequest } from "@/lib/api";
-import { Session } from "next-auth";
+import { Session } from "@/lib/session";
 
 interface DeleteProps {
     item: string;

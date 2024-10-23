@@ -17,8 +17,8 @@ import { Combobox } from "@/components/custom/ComboBox"
 import { useRouter } from "next/navigation"
 import { sendRequest } from "@/lib/api"
 import toast from "react-hot-toast"
-import { Session } from "next-auth"
 import { Loader2 } from "lucide-react"
+import { Session } from "@/lib/session"
 
 const formSchema = z.object({
     title: z.string().min(2, { message: "Title must be at least 2 characters" }),

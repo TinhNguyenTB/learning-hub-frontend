@@ -1,12 +1,11 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import EditSectionForm from "@/components/sections/EditSectionForm"
 import { sendRequest } from "@/lib/api";
-import { getServerSession } from "next-auth";
+import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import AlertBanner from "@/components/custom/AlertBanner";
 
 const SectionDetailPage = async ({ params }: { params: { courseId: string; sectionId: string } }) => {
-    const session = await getServerSession(authOptions);
+    const session = await getSession();
 
     let course;
     let section;
