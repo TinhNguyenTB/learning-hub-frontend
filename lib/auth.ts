@@ -46,7 +46,7 @@ export const refreshToken = async (oldRefreshToken: string) => {
         }
         const { access_token, refresh_token } = response.data;
         // update session with new tokens
-        const updateRes = await fetch("http://localhost:3000/api/auth/update-tokens", {
+        const updateRes = await fetch(`${process.env.BASE_URL}/api/auth/update-tokens`, {
             method: "POST",
             body: JSON.stringify({
                 access_token,

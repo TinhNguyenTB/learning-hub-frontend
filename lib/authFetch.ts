@@ -1,5 +1,5 @@
 import { refreshToken } from "./auth";
-import { getSession } from "./session";
+import { deleteSession, getSession } from "./session";
 import queryString from "query-string";
 
 
@@ -15,7 +15,17 @@ export const authFetch = async <T>(props: IRequest): Promise<IBackendRes<T>> => 
     } = props;
 
     const session = await getSession();
-
+    // Kiểm tra sự tồn tại của access token và refresh token
+    if (!session?.access_token || !session.refresh_token) {
+        // Không có access hoặc refresh token => Xóa session và chuyển hướng đăng nhập
+        await deleteSession();
+        window.location.href = "/sign-in";
+        return {
+            statusCode: 401,
+            message: "Session expired. Please log in again.",
+            error: "Unauthorized",
+        };
+    }
     const authHeaders = new Headers({
         "content-type": "application/json",
         Authorization: `Bearer ${session?.access_token}`,
@@ -45,11 +55,16 @@ export const authFetch = async <T>(props: IRequest): Promise<IBackendRes<T>> => 
         }
 
         if (res.status === 401) {
-            if (!session?.refresh_token) throw new Error("Refresh token not found");
             // Nếu lỗi 401 và có refresh token, thử làm mới token và gửi lại request.
             const newAccessToken = await refreshToken(session.refresh_token);
             if (!newAccessToken) {
-                return { statusCode: 401, message: "Refresh token expired", error: "Unauthorized" };
+                await deleteSession();
+                window.location.href = "/sign-in";
+                return {
+                    statusCode: 401,
+                    message: "Refresh token expired. Please log in again.",
+                    error: "Unauthorized"
+                };
             }
 
             // Cập nhật header với token mới và gửi lại request.
