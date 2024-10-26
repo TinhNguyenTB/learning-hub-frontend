@@ -7,7 +7,6 @@ const getPublishedSection = async (courseId: string) => {
         method: 'GET',
         queryParams: {
             courseId,
-
         }
     })
     if (res?.data) {

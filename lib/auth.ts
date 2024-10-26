@@ -14,12 +14,11 @@ export async function signIn(email: string, password: string) {
         }
     })
     if (response.data) {
-        const { user, access_token, refresh_token } = response.data;
+        const { user, access_token } = response.data;
         // create the session for authentication user
         await createSession({
-            user,
-            access_token,
-            refresh_token
+            user: user,
+            access_token: access_token,
         })
         redirect("/")
     }
@@ -29,36 +28,5 @@ export async function signIn(email: string, password: string) {
             message: response.message,
             statusCode: response.statusCode
         }
-    }
-}
-
-export const refreshToken = async (oldRefreshToken: string) => {
-    try {
-        const response = await sendRequest<IBackendRes<Session>>({
-            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/refresh`,
-            method: "POST",
-            body: {
-                refresh: oldRefreshToken
-            }
-        })
-        if (!response.data) {
-            throw new Error("Failed to refresh token " + response.message)
-        }
-        const { access_token, refresh_token } = response.data;
-        // update session with new tokens
-        const updateRes = await fetch(`${process.env.BASE_URL}/api/auth/update-tokens`, {
-            method: "POST",
-            body: JSON.stringify({
-                access_token,
-                refresh_token
-            })
-        })
-        if (!updateRes.ok) {
-            throw new Error("Failed to update the tokens")
-        }
-        return access_token
-    } catch (error) {
-        console.log("Refresh token failed", error);
-        return null
     }
 }

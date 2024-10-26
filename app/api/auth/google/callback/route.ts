@@ -7,7 +7,6 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
 
     const accessToken = searchParams.get("accessToken");
-    const refreshToken = searchParams.get("refreshToken");
     const userId = searchParams.get("userId");
     const name = searchParams.get("name");
     const email = searchParams.get("email");
@@ -15,7 +14,7 @@ export async function GET(req: NextRequest) {
     const isActive = searchParams.get("isActive");
     const role = searchParams.get("role");
 
-    if (!accessToken || !refreshToken || !userId || !name || !email || !image || !isActive || !role) {
+    if (!accessToken || !userId || !name || !email || !image || !isActive || !role) {
         throw new Error("Google Oauth Failed")
     }
 
@@ -29,7 +28,6 @@ export async function GET(req: NextRequest) {
             role: role
         },
         access_token: accessToken,
-        refresh_token: refreshToken
     })
 
     redirect("/")

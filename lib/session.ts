@@ -15,7 +15,6 @@ export type IUser = {
 export type Session = {
     user: IUser,
     access_token: string
-    refresh_token: string
 }
 
 const secretKet = process.env.SESSION_SECRET_KEY!
@@ -51,28 +50,24 @@ export async function getSession() {
     }
 }
 
-export async function deleteSession() {
-    await cookies().delete("session")
-}
-
-export async function updateTokens({ access_token, refresh_token }: {
+export async function updateTokens({ access_token }: {
     access_token: string;
-    refresh_token: string
 }) {
-    const cookie = cookies().get("session")?.value;
-    if (!cookie) {
-        return null;
+    try {
+        const cookie = cookies().get("session")?.value;
+        if (!cookie) return null;
+
+        const { payload } = await jwtVerify<Session>(cookie, encodeKey);
+        if (!payload) throw new Error("Session not found");
+
+        const newPayload: Session = {
+            user: { ...payload.user },
+            access_token
+        };
+
+        await createSession(newPayload);
+    } catch (error) {
+        console.error("Error updating tokens:", error);
+        throw new Error("Failed to update tokens");
     }
-    const { payload } = await jwtVerify<Session>(cookie, encodeKey);
-    if (!payload) {
-        throw new Error("Session not found")
-    }
-    const newPayload: Session = {
-        user: {
-            ...payload.user
-        },
-        access_token,
-        refresh_token
-    }
-    await createSession(newPayload);
 }

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 const SignInPage = async () => {
     const session = await getSession()
-    if (session) {
+    if (session && session.user) {
         return redirect('/')
     }
 

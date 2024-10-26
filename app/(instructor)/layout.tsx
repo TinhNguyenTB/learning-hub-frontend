@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 
 const InstructorLayout = async ({ children }: { children: React.ReactNode }) => {
     const session = await getSession()
-    if (!session) {
+    if (!session || !session.user) {
         return redirect('/sign-in')
     }
     return (

@@ -12,7 +12,7 @@ const CourseDetailLayout = async ({
 }) => {
 
     const session = await getSession()
-    if (!session) {
+    if (!session || !session.user) {
         return redirect('/sign-in')
     }
     const user = session.user;

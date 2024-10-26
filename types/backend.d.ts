@@ -93,6 +93,21 @@ declare global {
         resources: IResource[]
     }
 
+    interface IProgress {
+        id: string
+        studentId: string
+        sectionId: string
+        section: ISection
+        isCompleted: boolean
+    }
+
+    interface IPurchase {
+        id: string
+        customerId: string
+        courseId: string
+        course: ICourse
+    }
+
     interface IComment {
         id: string
         content: string
