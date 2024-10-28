@@ -1,6 +1,5 @@
-import getCourseByIdForStudent from "@/app/actions/courses/getCourseByIdForStudent"
-import getLevelById from "@/app/actions/levels/getLevelById"
-import getUserById from "@/app/actions/users/getUserById"
+import { getCourseByIdForStudent } from "@/app/actions/courses"
+import { getLevelById } from "@/app/actions/levels"
 import ReadText from "@/components/custom/ReadText"
 import Image from "next/image"
 import { redirect } from "next/navigation"
@@ -11,11 +10,13 @@ const CourseOverview = async ({ params }: { params: { courseId: string } }) => {
         return redirect('/')
     }
 
-    const instructor = await getUserById(course.instructorId)
+    const instructor = course?.instructor
+
     let level;
     if (course.levelId) {
         level = await getLevelById(course.levelId)
     }
+
     return (
         <div className="px-6 py-4 flex flex-col gap-5 text-sm">
             <div className="flex justify-between">

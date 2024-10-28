@@ -2,7 +2,6 @@ import { Gem } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import getUserById from "@/app/actions/users/getUserById";
 import Ratings from "@/components/custom/Rating";
 
 interface CourseCardProps {
@@ -10,7 +9,7 @@ interface CourseCardProps {
 }
 const CourseCard = async ({ course }: CourseCardProps) => {
 
-    const instructor = await getUserById(course.instructorId)
+    const instructor = course?.instructor
 
     return (
         <Link href={`/courses/${course.id}/overview`} className="border rounded-lg cursor-pointer">

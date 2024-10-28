@@ -1,5 +1,5 @@
-import getCategories from "@/app/actions/categories/getCategories"
-import getCoursesByCategory from "@/app/actions/courses/getCoursesByCategory"
+import { getCategories } from "@/app/actions/categories"
+import { getCoursesByCategory } from "@/app/actions/courses"
 import CourseCard from "@/components/courses/CourseCard"
 import Categories from "@/components/custom/Categories"
 import DynamicPagination from "@/components/custom/DynamicPagination"

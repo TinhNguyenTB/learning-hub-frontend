@@ -1,4 +1,4 @@
-import getPublishedSection from "@/app/actions/sections/getPublishedSection"
+import { getPublishedSection } from "@/app/actions/sections"
 import Link from "next/link"
 
 interface CourseSideBarProps {

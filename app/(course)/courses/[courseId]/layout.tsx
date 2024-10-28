@@ -1,4 +1,4 @@
-import getCourseByIdForStudent from "@/app/actions/courses/getCourseByIdForStudent";
+import { getCourseByIdForStudent } from "@/app/actions/courses";
 import CourseSideBar from "@/components/layout/CourseSideBar";
 import TopBar from "@/components/layout/TopBar";
 import { getSession } from "@/lib/session";

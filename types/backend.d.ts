@@ -51,8 +51,10 @@ declare global {
         price: number
         isPublished: boolean
         instructor: {
-            name: string,
+            name: string
             id: string
+            email: string
+            image: string
         }
         instructorId: string
         categoryId: string
