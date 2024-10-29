@@ -9,6 +9,8 @@ import Link from "next/link"
 import ReadText from "@/components/custom/ReadText"
 import toast from "react-hot-toast"
 import ReactPlayer from "react-player/lazy"
+import ProgressButton from "@/components/sections/ProgressButton"
+import { Session } from "@/lib/session"
 
 interface SectionsDetailsProps {
     course: ICourse
@@ -16,15 +18,14 @@ interface SectionsDetailsProps {
     resources: IResource[] | undefined
     progress: IProgress | undefined
     purchase: IPurchase | undefined
-    access_token: string
+    session: Session
 }
 
-const SectionsDetails = ({ course, resources, section, purchase, access_token }: SectionsDetailsProps) => {
+const SectionsDetails = ({ course, resources, section, purchase, progress, session }: SectionsDetailsProps) => {
     const [isLoading, setIsLoading] = useState(false);
     const isLocked = !purchase && !section?.isFree
+    const router = useRouter();
 
-    const router = useRouter()
-    console.log(section?.videoUrl)
     const buyCourse = async () => {
         try {
             setIsLoading(true);
@@ -32,7 +33,7 @@ const SectionsDetails = ({ course, resources, section, purchase, access_token }:
                 method: "POST",
                 url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/courses/${course.id}/checkout`,
                 headers: {
-                    Authorization: `Bearer ${access_token}`
+                    Authorization: `Bearer ${session.access_token}`
                 }
             });
             if (res.data) {
@@ -59,7 +60,11 @@ const SectionsDetails = ({ course, resources, section, purchase, access_token }:
                         }
                     </Button>
                     :
-                    <Button>Mark as complete</Button>
+                    <ProgressButton
+                        sectionId={section?.id}
+                        isCompleted={!!progress?.isCompleted}
+                        session={session}
+                    />
                 }
             </div>
             <ReadText value={section?.description!} />
@@ -81,7 +86,7 @@ const SectionsDetails = ({ course, resources, section, purchase, access_token }:
                     Resources
                 </h2>
                 {resources?.map(resource => (
-                    <Link
+                    <Link key={resource.id}
                         target="_blank"
                         href={resource.fileUrl}
                         className="flex items-center bg-[#FFF8EB] rounded-lg text-sm font-medium p-3"

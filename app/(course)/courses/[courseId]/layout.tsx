@@ -26,7 +26,11 @@ const CourseDetailLayout = async ({
         <div className="h-full flex flex-col">
             <TopBar />
             <div className="flex-1 flex">
-                <CourseSideBar course={course} studentId={user.id} />
+                <CourseSideBar
+                    course={course}
+                    studentId={user.id}
+                    session={session}
+                />
                 <div className="flex-1">
                     {children}
                 </div>

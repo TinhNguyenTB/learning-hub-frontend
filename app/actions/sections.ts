@@ -13,6 +13,9 @@ export const getPublishedSection = async (courseId: string) => {
     if (res?.data) {
         return res.data
     }
+    else {
+        console.log(res.message)
+    }
 }
 
 export const getPublishedSectionById = async (access_token: string, sectionId: string) => {
@@ -25,5 +28,8 @@ export const getPublishedSectionById = async (access_token: string, sectionId: s
     })
     if (res?.data) {
         return res.data
+    }
+    else {
+        console.log(res.message)
     }
 }

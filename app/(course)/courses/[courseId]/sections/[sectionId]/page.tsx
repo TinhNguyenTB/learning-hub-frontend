@@ -37,7 +37,7 @@ const SectionDetailPage = async ({ params }: { params: { courseId: string; secti
         <>
             <div>SectionDetailPage</div>
             <SectionsDetails
-                access_token={access_token}
+                session={session}
                 course={course}
                 section={section}
                 purchase={purchase}

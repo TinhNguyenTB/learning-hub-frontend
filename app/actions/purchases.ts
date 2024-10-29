@@ -14,4 +14,7 @@ export const getPurchaseByCourseId = async (courseId: string, session: Session) 
     if (res.data) {
         return res.data
     }
+    else if (res.error) {
+        console.log(res)
+    }
 }
