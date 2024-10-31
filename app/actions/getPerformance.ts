@@ -15,14 +15,14 @@ const groupByCourse = (purchases: IPurchase[]) => {
     return grouped;
 }
 
-export const getPerformance = async (access_token: string, userId: string) => {
+export const getPerformance = async (access_token: string, instructorId: string) => {
     try {
         let purchases: IPurchase[] = [];
         const res = await sendRequest<IBackendRes<IPurchase[]>>({
             url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/purchases`,
             method: 'GET',
             queryParams: {
-                userId
+                instructorId
             },
             headers: {
                 Authorization: `Bearer ${access_token}`

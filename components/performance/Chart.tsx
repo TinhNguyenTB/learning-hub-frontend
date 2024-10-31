@@ -6,7 +6,7 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, Rect
 const Chart = ({ data }: { data: { name: string, sales: number, total: number }[] }) => {
     return (
         <Card>
-            <ResponsiveContainer width="100%" height={450}>
+            <ResponsiveContainer width="100%" height={400}>
                 <BarChart
                     data={data}
                 >
