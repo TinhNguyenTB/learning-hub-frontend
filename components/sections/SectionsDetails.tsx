@@ -2,15 +2,16 @@
 
 import { Button } from "@/components/ui/button"
 import { sendRequest } from "@/lib/api"
-import { File, Loader2, Lock } from "lucide-react"
+import { Loader2, Lock } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import Link from "next/link"
-import ReadText from "@/components/custom/ReadText"
 import toast from "react-hot-toast"
-import ReactPlayer from "react-player/lazy"
+import dynamic from "next/dynamic";
+const ReactPlayer = dynamic(() => import("react-player/lazy"), { ssr: false });
 import ProgressButton from "@/components/sections/ProgressButton"
 import { Session } from "@/lib/session"
+import SectionTabs from "@/components/sections/SectionTabs"
+
 
 interface SectionsDetailsProps {
     course: ICourse
@@ -67,35 +68,25 @@ const SectionsDetails = ({ course, resources, section, purchase, progress, sessi
                     />
                 }
             </div>
-            <ReadText value={section?.description!} />
+
             {isLocked ?
                 <div className="px-10 flex flex-col gap-5 items-center bg-[#FFF8EB]">
                     <Lock className="h-8 w-8" />
                     <p className="text-sm font-bold">Video for this section is locked. Please buy the course to access.</p>
                 </div>
                 :
-                section && section.videoUrl &&
                 <ReactPlayer
                     url={section?.videoUrl}
-                    className="md:max-w-[600px]"
+                    className="max-w-full"
                     controls
                 />
             }
-            <div>
-                <h2 className="text-xl font-bold mb-5">
-                    Resources
-                </h2>
-                {resources?.map(resource => (
-                    <Link key={resource.id}
-                        target="_blank"
-                        href={resource.fileUrl}
-                        className="flex items-center bg-[#FFF8EB] rounded-lg text-sm font-medium p-3"
-                    >
-                        <File className="h-4 w-4 mr-4" />
-                        {resource.name}
-                    </Link>
-                ))}
-            </div>
+
+            <SectionTabs
+                session={session}
+                section={section}
+                resources={resources}
+            />
         </div>
     )
 }

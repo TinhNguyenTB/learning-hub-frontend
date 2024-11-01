@@ -29,13 +29,12 @@ const SectionDetailPage = async ({ params }: { params: { courseId: string; secti
 
     let resources: IResource[] | undefined = [];
     if (purchase) {
-        resources = await getResourcesBySectionId(params.sectionId)
+        resources = await getResourcesBySectionId(access_token, params.sectionId)
     }
     const progress = await getProgressByStudentId(session.access_token, session.user.id, params.sectionId)
 
     return (
         <>
-            <div>SectionDetailPage</div>
             <SectionsDetails
                 session={session}
                 course={course}

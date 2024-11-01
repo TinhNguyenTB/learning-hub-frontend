@@ -116,8 +116,6 @@ declare global {
         userId: string
         user: {
             name: string
-            id: string
-            email: string
             image: string
         }
         courseId: string
@@ -131,6 +129,10 @@ declare global {
         content: string
         quality: number
         userId: string
+        user: {
+            name: string
+            image: string
+        }
         courseId: string
         createdAt: Date
         updatedAt: Date
