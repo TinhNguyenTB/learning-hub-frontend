@@ -75,7 +75,7 @@ const CommentComponent: React.FC<{
     }
 
     return (
-        <div className={`flex ${depth > 0 ? 'ml-4 mt-2' : 'mt-4'}`}>
+        <div className={`flex ${depth > 0 ? 'ml-2 mt-2' : 'mt-4'}`}>
             <Avatar className="w-8 h-8 mt-1">
                 <AvatarImage src={comment.avatar} alt={comment.author} />
                 <AvatarFallback>{comment.author.slice(0, 1).toUpperCase()}</AvatarFallback>

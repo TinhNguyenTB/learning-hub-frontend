@@ -1,4 +1,4 @@
-import getCoursesBySearch from "@/app/actions/courses/getCoursesBySearch";
+import { getCourseBySearch } from "@/app/actions/courses";
 import CourseCard from "@/components/courses/CourseCard";
 import DynamicPagination from "@/components/custom/DynamicPagination";
 
@@ -11,7 +11,7 @@ const SearchPage = async ({
     const queryText = searchParams.query || "";
     const { current, pageSize } = searchParams;
     let courses, total, pages;
-    const res = await getCoursesBySearch(queryText, current, pageSize);
+    const res = await getCourseBySearch(queryText, current, pageSize);
     if (res) {
         courses = res.courses
         total = res.total

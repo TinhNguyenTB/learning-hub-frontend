@@ -25,9 +25,10 @@ interface EditRateModalProps {
     current: number
     fetchAllRatings: (v: number) => void
     session: Session
+    courseId: string | undefined
 }
 
-const EditRateModal = ({ open, setOpen, id, content, quality, current, fetchAllRatings, session }: EditRateModalProps) => {
+const EditRateModal = ({ open, setOpen, id, content, quality, current, fetchAllRatings, session, courseId }: EditRateModalProps) => {
     const [newRating, setNewRating] = useState(quality);
     const [newContent, setNewContent] = useState(content);
     const [error, setError] = useState<string | null>(null);
@@ -53,7 +54,7 @@ const EditRateModal = ({ open, setOpen, id, content, quality, current, fetchAllR
         // Clear any previous error
         setError(null);
 
-        const res = await editRate(session, id, newContent, newRating)
+        const res = await editRate(session, id, newContent, newRating, courseId!)
         if (res.data) {
             toast.success("Rate success")
             fetchAllRatings(current);

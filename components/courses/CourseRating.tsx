@@ -7,8 +7,8 @@ import { createNewRating, deleteRate, getAllRatings } from '@/app/actions/rating
 import toast from 'react-hot-toast';
 import dayjs from 'dayjs'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import EditRateModal from './EditRateModal';
-import ConfirmModal from '../custom/ConfirmModal';
+import EditRateModal from '@/components/courses/EditRateModal';
+import ConfirmModal from '@/components/custom/ConfirmModal';
 
 
 const CourseRating = ({ session, courseId }: { session: Session; courseId: string | undefined }) => {
@@ -82,7 +82,7 @@ const CourseRating = ({ session, courseId }: { session: Session; courseId: strin
     };
 
     const handleDeleteRate = async () => {
-        const res = await deleteRate(session, rateId);
+        const res = await deleteRate(session, rateId, courseId!);
         if (res.data) {
             toast.success("Delete rate success")
             fetchAllRatings(current);
@@ -137,7 +137,7 @@ const CourseRating = ({ session, courseId }: { session: Session; courseId: strin
                             <p>{rating.user.name}</p>
                         </div>
                         <div className='flex gap-4 items-center'>
-                            <Rating readonly initialValue={rating.quality} />
+                            <Rating readonly initialValue={rating.quality} allowFraction />
                             <span>{dayjs(rating.createdAt).format('MM/DD/YYYY')}</span>
                         </div>
                         <p className='mt-2'>{rating.content}</p>
@@ -183,6 +183,7 @@ const CourseRating = ({ session, courseId }: { session: Session; courseId: strin
                     current={current}
                     fetchAllRatings={fetchAllRatings}
                     session={session}
+                    courseId={courseId}
                 />
             }
             {openDeleteModal &&
