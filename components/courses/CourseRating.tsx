@@ -3,11 +3,12 @@ import { Rating } from 'react-simple-star-rating'
 import { Textarea } from '@/components/ui/textarea';
 import { Session } from '@/lib/session';
 import { Button } from '../ui/button';
-import { createNewRating, getAllRatings } from '@/app/actions/ratings';
+import { createNewRating, deleteRate, getAllRatings } from '@/app/actions/ratings';
 import toast from 'react-hot-toast';
 import dayjs from 'dayjs'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import EditRateModal from './EditRateModal';
+import ConfirmModal from '../custom/ConfirmModal';
 
 
 const CourseRating = ({ session, courseId }: { session: Session; courseId: string | undefined }) => {
@@ -53,7 +54,9 @@ const CourseRating = ({ session, courseId }: { session: Session; courseId: strin
         }
         else if (res.error) {
             toast.error("Something went wrong")
-            console.log(error)
+            setNewRating(0);
+            setNewContent("")
+            console.log(res)
         }
 
         fetchAllRatings(1);
@@ -78,6 +81,18 @@ const CourseRating = ({ session, courseId }: { session: Session; courseId: strin
         setCurrent((prev) => prev + 1);
     };
 
+    const handleDeleteRate = async () => {
+        const res = await deleteRate(session, rateId);
+        if (res.data) {
+            toast.success("Delete rate success")
+            fetchAllRatings(current);
+        }
+        else if (res.error) {
+            toast.error("Something went wrong");
+            console.log(res)
+        }
+    }
+
     useEffect(() => {
         fetchAllRatings(1);
     }, []);
@@ -85,9 +100,17 @@ const CourseRating = ({ session, courseId }: { session: Session; courseId: strin
     return (
         <div className='my-2'>
             {!hasRated && (
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-4 mt-5">
+                    <div className='flex gap-4 items-center'>
+                        <Avatar>
+                            <AvatarImage src={session.user.image} />
+                            <AvatarFallback className='font-bold text-white bg-black'>
+                                {session.user.name.slice(0, 1).toUpperCase()}
+                            </AvatarFallback>
+                        </Avatar>
+                        <p>{session.user.name}</p>
+                    </div>
                     <Rating
-                        className="mt-5"
                         onClick={handleRatingChange}
                         allowFraction
                     />
@@ -130,16 +153,24 @@ const CourseRating = ({ session, courseId }: { session: Session; courseId: strin
                                 >
                                     Edit
                                 </Button>
-                                <Button variant={"link"} className='pl-0'>Delete</Button>
+                                <Button variant={"link"} className='pl-0'
+                                    onClick={() => {
+                                        setRateId(rating.id)
+                                        setOpenDeleteModal(true)
+                                    }}
+                                >
+                                    Delete
+                                </Button>
                             </div>
                         )}
                     </div>
                 ))}
 
                 {hasMore && (
-                    <button onClick={loadMoreRatings} className="mt-4 px-4 py-2 bg-blue-500 text-white">
+                    <Button onClick={loadMoreRatings}
+                    >
                         Load More
-                    </button>
+                    </Button>
                 )}
             </div>
             {openEditModal &&
@@ -152,6 +183,15 @@ const CourseRating = ({ session, courseId }: { session: Session; courseId: strin
                     current={current}
                     fetchAllRatings={fetchAllRatings}
                     session={session}
+                />
+            }
+            {openDeleteModal &&
+                <ConfirmModal
+                    open={openDeleteModal}
+                    setOpen={setOpenDeleteModal}
+                    title='Delete rate'
+                    description='Are you sure to delete this rate?'
+                    onOk={handleDeleteRate}
                 />
             }
         </div>
