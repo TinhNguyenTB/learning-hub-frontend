@@ -32,3 +32,29 @@ export const getAllRatings = async (session: Session, courseId: string, current:
     })
     return res;
 }
+
+export const editRate = async (session: Session, id: string, content: string, quality: number) => {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/ratings/${id}`,
+        method: 'PATCH',
+        body: {
+            content,
+            quality,
+        },
+        headers: {
+            Authorization: `Bearer ${session?.access_token}`
+        }
+    })
+    return res;
+}
+
+export const deleteRate = async (session: Session, id: string) => {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/ratings/${id}`,
+        method: 'DELETE',
+        headers: {
+            Authorization: `Bearer ${session?.access_token}`
+        }
+    })
+    return res;
+}

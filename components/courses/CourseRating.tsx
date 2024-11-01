@@ -7,6 +7,8 @@ import { createNewRating, getAllRatings } from '@/app/actions/ratings';
 import toast from 'react-hot-toast';
 import dayjs from 'dayjs'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import EditRateModal from './EditRateModal';
+
 
 const CourseRating = ({ session, courseId }: { session: Session; courseId: string | undefined }) => {
     const [ratings, setRatings] = useState<IRating[]>([]);
@@ -17,6 +19,12 @@ const CourseRating = ({ session, courseId }: { session: Session; courseId: strin
     const [current, setCurrent] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [hasRated, setHasRated] = useState(false);
+
+    const [openEditModal, setOpenEditModal] = useState(false);
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [rateId, setRateId] = useState("");
+    const [contentUpdate, setContentUpdate] = useState("");
+    const [qualityUpdate, setQualityUpdate] = useState(0);
 
     const handleRatingChange = (rate: number) => {
         setNewRating(rate);
@@ -47,10 +55,10 @@ const CourseRating = ({ session, courseId }: { session: Session; courseId: strin
             toast.error("Something went wrong")
             console.log(error)
         }
-        // // Optionally, refresh ratings or update the list directly
-        // fetchRatings(0, loadedCount + 10); // Refresh ratings
-        // setNewRating(0);
-        // setNewContent('');
+
+        fetchAllRatings(1);
+        setNewRating(0);
+        setNewContent('');
     };
 
     const fetchAllRatings = async (current: number) => {
@@ -99,7 +107,9 @@ const CourseRating = ({ session, courseId }: { session: Session; courseId: strin
                         <div className='flex gap-4 items-center mb-2'>
                             <Avatar>
                                 <AvatarImage src={rating.user.image} />
-                                <AvatarFallback>{rating.user.name.slice(0, 1).toUpperCase()}</AvatarFallback>
+                                <AvatarFallback className='font-bold text-white bg-black'>
+                                    {rating.user.name.slice(0, 1).toUpperCase()}
+                                </AvatarFallback>
                             </Avatar>
                             <p>{rating.user.name}</p>
                         </div>
@@ -110,7 +120,16 @@ const CourseRating = ({ session, courseId }: { session: Session; courseId: strin
                         <p className='mt-2'>{rating.content}</p>
                         {rating.userId === session.user.id && (
                             <div className="flex gap-2">
-                                <Button variant={"link"} className='pl-0'>Edit</Button>
+                                <Button variant={"link"} className='pl-0'
+                                    onClick={() => {
+                                        setRateId(rating.id)
+                                        setContentUpdate(rating.content)
+                                        setQualityUpdate(rating.quality)
+                                        setOpenEditModal(true)
+                                    }}
+                                >
+                                    Edit
+                                </Button>
                                 <Button variant={"link"} className='pl-0'>Delete</Button>
                             </div>
                         )}
@@ -123,6 +142,18 @@ const CourseRating = ({ session, courseId }: { session: Session; courseId: strin
                     </button>
                 )}
             </div>
+            {openEditModal &&
+                <EditRateModal
+                    content={contentUpdate}
+                    id={rateId}
+                    setOpen={setOpenEditModal}
+                    quality={qualityUpdate}
+                    open={openEditModal}
+                    current={current}
+                    fetchAllRatings={fetchAllRatings}
+                    session={session}
+                />
+            }
         </div>
     )
 }
