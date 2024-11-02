@@ -17,31 +17,24 @@ const CommentComponent: React.FC<{
     comment: IComment,
     depth?: number,
     onDelete: (id: string) => void,
-    onEdit: (id: string, newContent: string) => void
+    onEdit: (id: string, newContent: string) => void,
+
 }> = ({ comment, depth = 0, onDelete, onEdit }) => {
 
-    const [isReplying, setIsReplying] = useState(false)
-    const [replyContent, setReplyContent] = useState('')
     const [isEditing, setIsEditing] = useState(false)
     const [editContent, setEditContent] = useState(comment.content)
-
-    const handleReply = () => {
-        console.log(`Replying to comment ${comment.id}: ${replyContent}`)
-        setIsReplying(false)
-        setReplyContent('')
-    }
 
     return (
         <div className={`flex ${depth > 0 ? 'ml-2 mt-2' : 'mt-4'}`}>
             <Avatar className="w-8 h-8 mt-1">
-                <AvatarImage src={comment?.user?.image} alt={comment?.user?.name} />
-                <AvatarFallback>{comment?.user?.name.slice(0, 1).toUpperCase()}</AvatarFallback>
+                <AvatarImage src={comment.user?.image} alt={comment.user?.name} />
+                <AvatarFallback>{comment.user?.name.slice(0, 1).toUpperCase()}</AvatarFallback>
             </Avatar>
             <div className="ml-2 flex-grow">
                 <div className="bg-muted rounded-2xl px-3 py-2">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h3 className="text-sm font-semibold">{comment?.user?.name}</h3>
+                            <h3 className="text-sm font-semibold">{comment.user?.name}</h3>
                             <span className="text-xs text-muted-foreground">
                                 {dayjs(comment.createdAt).fromNow()}
                             </span>
@@ -88,31 +81,6 @@ const CommentComponent: React.FC<{
                         <p className="text-sm mt-1">{comment.content}</p>
                     )}
                 </div>
-                <div className="flex items-center mt-1 space-x-3 text-xs font-semibold text-muted-foreground">
-                    <Button variant="ghost" size="sm" className="h-auto p-0" onClick={() => setIsReplying(!isReplying)}>
-                        Reply
-                    </Button>
-                </div>
-                {isReplying && (
-                    <div className="mt-2 flex items-center">
-                        <Input
-                            value={replyContent}
-                            onChange={(e) => setReplyContent(e.target.value)}
-                            placeholder="Write a reply..."
-                            className="flex-grow mr-2"
-                        />
-                        <Button onClick={handleReply} size="sm">
-                            Reply
-                        </Button>
-                    </div>
-                )}
-                {comment.children && comment.children.length > 0 && (
-                    <div className="mt-2">
-                        {comment.children.map((reply) => (
-                            <CommentComponent key={reply.id} comment={reply} depth={depth + 1} onDelete={onDelete} onEdit={onEdit} />
-                        ))}
-                    </div>
-                )}
             </div>
         </div>
     )
@@ -202,7 +170,7 @@ export default function Comments({ session, courseId }: CommentsProps) {
     }, [])
 
     return (
-        <div className="max-w-full p-4">
+        <div className="max-w-full p-5">
             <div className="flex items-center space-x-2 mb-4">
                 <Avatar>
                     <AvatarImage src={session.user.image} alt={session.user.name} />
@@ -217,7 +185,7 @@ export default function Comments({ session, courseId }: CommentsProps) {
                 <Button onClick={handlePostComment}>Post</Button>
             </div>
             <div className="space-y-4">
-                {comments.map((comment, index) => (
+                {comments.length > 0 && comments.map((comment, index) => (
                     <CommentComponent
                         key={comment.id + index}
                         comment={comment}
@@ -228,7 +196,7 @@ export default function Comments({ session, courseId }: CommentsProps) {
             </div>
             {hasMore ?
                 <Button
-                    className='mt-3'
+                    className='mt-5'
                     onClick={loadMoreComments}
                 >
                     Load More

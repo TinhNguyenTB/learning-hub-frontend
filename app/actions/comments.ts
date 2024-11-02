@@ -1,7 +1,7 @@
 import { sendRequest } from "@/lib/api"
 import { Session } from "@/lib/session"
 
-export const createNewComment = async (session: Session, courseId: string, userId: string, content: string, parentId?: string) => {
+export const createNewComment = async (session: Session, courseId: string, userId: string, content: string) => {
     const res = await sendRequest<IBackendRes<IComment>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/comments`,
         method: 'POST',
@@ -9,7 +9,6 @@ export const createNewComment = async (session: Session, courseId: string, userI
             userId,
             content,
             courseId,
-            parentId
         },
         headers: {
             Authorization: `Bearer ${session?.access_token}`

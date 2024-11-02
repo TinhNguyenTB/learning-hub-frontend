@@ -114,12 +114,12 @@ declare global {
         id: string
         content: string
         userId: string
+        parentId: string
         user: {
             name: string
             image: string
         }
         courseId: string
-        children: IComment[]
         createdAt: Date
         updatedAt: Date
     }
