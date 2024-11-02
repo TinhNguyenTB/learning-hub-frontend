@@ -43,3 +43,17 @@ export const deleteComment = async (session: Session, id: string) => {
     })
     return res;
 }
+
+export const updateComment = async (session: Session, id: string, content: string) => {
+    const res = await sendRequest<IBackendRes<IComment>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/comments/${id}`,
+        method: 'PATCH',
+        body: {
+            content
+        },
+        headers: {
+            Authorization: `Bearer ${session?.access_token}`
+        }
+    })
+    return res;
+}

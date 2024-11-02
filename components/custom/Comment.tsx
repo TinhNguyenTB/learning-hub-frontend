@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Pencil, Trash2, MessageSquare } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import dayjs from 'dayjs'
-import { createNewComment, deleteComment, getAllComments } from '@/app/actions/comments'
+import { createNewComment, deleteComment, getAllComments, updateComment } from '@/app/actions/comments'
 import { Session } from '@/lib/session'
 import toast from 'react-hot-toast'
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -29,11 +29,6 @@ const CommentComponent: React.FC<{
         console.log(`Replying to comment ${comment.id}: ${replyContent}`)
         setIsReplying(false)
         setReplyContent('')
-    }
-
-    const handleEdit = () => {
-        onEdit(comment.id, editContent)
-        setIsEditing(false)
     }
 
     return (
@@ -78,7 +73,14 @@ const CommentComponent: React.FC<{
                                 className="mb-2"
                             />
                             <div className="flex justify-end space-x-2">
-                                <Button onClick={handleEdit} size="sm">Save</Button>
+                                <Button
+                                    onClick={() => {
+                                        onEdit(comment?.id, editContent)
+                                        setIsEditing(false)
+                                    }}
+                                    size="sm"
+                                >Save
+                                </Button>
                                 <Button onClick={() => setIsEditing(false)} size="sm" variant="outline">Cancel</Button>
                             </div>
                         </div>
@@ -181,19 +183,18 @@ export default function Comments({ session, courseId }: CommentsProps) {
         }
     }
 
-    const handleEditComment = (id: string, newContent: string) => {
-        const editComment = (comments: IComment[]): IComment[] => {
-            return comments.map(comment => {
-                if (comment.id === id) {
-                    return { ...comment, content: newContent }
-                }
-                if (comment.children) {
-                    comment.children = editComment(comment.children)
-                }
-                return comment
-            })
+    const handleEditComment = async (id: string, newContent: string) => {
+        const res = await updateComment(session, id, newContent);
+        if (res.data) {
+            setComments((prev) =>
+                prev.map(comment =>
+                    comment.id === id ? { ...comment, content: newContent } : comment
+                )
+            );
+            toast.success("Edit comment success");
+        } else if (res.error) {
+            toast.error(res.message);
         }
-        setComments(editComment(comments))
     }
 
     useEffect(() => {
