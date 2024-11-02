@@ -1,58 +1,20 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Pencil, Trash2, MessageSquare, X } from "lucide-react"
+import { Pencil, Trash2, MessageSquare } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-
-interface Comment {
-    id: string
-    author: string
-    avatar: string
-    content: string
-    timestamp: string
-    children?: Comment[]
-}
-
-const initialComments: Comment[] = [
-    {
-        id: '1',
-        author: 'Alice Johnson',
-        avatar: '/placeholder.svg?height=40&width=40',
-        content: 'This is a great post! Thanks for sharing.',
-        timestamp: '2h',
-        children: [
-            {
-                id: '2',
-                author: 'Bob Smith',
-                avatar: '/placeholder.svg?height=40&width=40',
-                content: 'I agree, very insightful.',
-                timestamp: '1h',
-                children: [
-                    {
-                        id: '3',
-                        author: 'Charlie Brown',
-                        avatar: '/placeholder.svg?height=40&width=40',
-                        content: 'Could you elaborate more on that point?',
-                        timestamp: '30m',
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        id: '4',
-        author: 'David Lee',
-        avatar: '/placeholder.svg?height=40&width=40',
-        content: 'Interesting perspective. I have a different view on this.',
-        timestamp: '3h',
-    },
-]
+import dayjs from 'dayjs'
+import { createNewComment, deleteComment, getAllComments } from '@/app/actions/comments'
+import { Session } from '@/lib/session'
+import toast from 'react-hot-toast'
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 
 const CommentComponent: React.FC<{
-    comment: Comment,
+    comment: IComment,
     depth?: number,
     onDelete: (id: string) => void,
     onEdit: (id: string, newContent: string) => void
@@ -77,15 +39,17 @@ const CommentComponent: React.FC<{
     return (
         <div className={`flex ${depth > 0 ? 'ml-2 mt-2' : 'mt-4'}`}>
             <Avatar className="w-8 h-8 mt-1">
-                <AvatarImage src={comment.avatar} alt={comment.author} />
-                <AvatarFallback>{comment.author.slice(0, 1).toUpperCase()}</AvatarFallback>
+                <AvatarImage src={comment?.user?.image} alt={comment?.user?.name} />
+                <AvatarFallback>{comment?.user?.name.slice(0, 1).toUpperCase()}</AvatarFallback>
             </Avatar>
             <div className="ml-2 flex-grow">
                 <div className="bg-muted rounded-2xl px-3 py-2">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h3 className="text-sm font-semibold">{comment.author}</h3>
-                            <span className="text-xs text-muted-foreground">{comment.timestamp}</span>
+                            <h3 className="text-sm font-semibold">{comment?.user?.name}</h3>
+                            <span className="text-xs text-muted-foreground">
+                                {dayjs(comment.createdAt).fromNow()}
+                            </span>
                         </div>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -99,7 +63,7 @@ const CommentComponent: React.FC<{
                                     <Pencil className="mr-2 h-4 w-4" />
                                     <span>Edit</span>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => onDelete(comment.id)}>
+                                <DropdownMenuItem onClick={() => onDelete(comment?.id)}>
                                     <Trash2 className="mr-2 h-4 w-4" />
                                     <span>Delete</span>
                                 </DropdownMenuItem>
@@ -152,39 +116,73 @@ const CommentComponent: React.FC<{
     )
 }
 
-export default function Comments() {
-    const [comments, setComments] = useState(initialComments)
+interface CommentsProps {
+    session: Session
+    courseId: string | undefined
+}
+
+export default function Comments({ session, courseId }: CommentsProps) {
+    const [comments, setComments] = useState<IComment[] | []>([])
     const [newComment, setNewComment] = useState('')
 
-    const handlePostComment = () => {
-        const newCommentObj: Comment = {
-            id: Date.now().toString(),
-            author: 'Current User',
-            avatar: '/avatar_placeholder.jpg?height=40&width=40',
-            content: newComment,
-            timestamp: 'Just now'
+    const [hasMore, setHasMore] = useState(true);
+    const [current, setCurrent] = useState(1);
+
+    const fetchAllComments = async (current: number) => {
+        const res = await getAllComments(session, courseId!, current);
+        if (res.data) {
+            if (res.data.meta.total < 11 || res.data.result.length < 1) {
+                setHasMore(false);
+            }
+            setComments([...res.data.result, ...comments])
         }
-        setComments([newCommentObj, ...comments])
+    }
+
+    const fetchMoreComments = async (current: number) => {
+        const res = await getAllComments(session, courseId!, current);
+        if (res.data) {
+            if (res.data.meta.total < 11 || res.data.result.length < 1) {
+                setHasMore(false);
+            }
+            setComments([...comments, ...res.data.result,])
+        }
+    }
+
+    const loadMoreComments = () => {
+        if (hasMore) {
+            fetchMoreComments(current + 1);
+            setCurrent((prev) => prev + 1);
+        }
+    };
+
+    const handlePostComment = async () => {
+        const res = await createNewComment(session, courseId!, session.user.id, newComment)
+        if (res.data) {
+            setComments([res.data, ...comments])
+            toast.success("Post comment success")
+            fetchAllComments(1);
+        }
+        else if (res.error) {
+            toast.error(res.message)
+        }
         setNewComment('')
     }
 
-    const handleDeleteComment = (id: string) => {
-        const deleteComment = (comments: Comment[]): Comment[] => {
-            return comments.filter(comment => {
-                if (comment.id === id) {
-                    return false
-                }
-                if (comment.children) {
-                    comment.children = deleteComment(comment.children)
-                }
-                return true
-            })
+    const handleDeleteComment = async (id: string) => {
+        const res = await deleteComment(session, id)
+        if (res.data) {
+            setComments((prev) =>
+                prev.filter(comment => comment.id !== res.data?.id)
+            );
+            toast.success("Delete comment success")
         }
-        setComments(deleteComment(comments))
+        else if (res.error) {
+            toast.error(res.message)
+        }
     }
 
     const handleEditComment = (id: string, newContent: string) => {
-        const editComment = (comments: Comment[]): Comment[] => {
+        const editComment = (comments: IComment[]): IComment[] => {
             return comments.map(comment => {
                 if (comment.id === id) {
                     return { ...comment, content: newContent }
@@ -198,12 +196,16 @@ export default function Comments() {
         setComments(editComment(comments))
     }
 
+    useEffect(() => {
+        fetchAllComments(1)
+    }, [])
+
     return (
         <div className="max-w-full p-4">
             <div className="flex items-center space-x-2 mb-4">
                 <Avatar>
-                    <AvatarImage src="/placeholder.svg?height=40&width=40" alt="Your Avatar" />
-                    <AvatarFallback>YA</AvatarFallback>
+                    <AvatarImage src={session.user.image} alt={session.user.name} />
+                    <AvatarFallback>{session.user.name.slice(0, 1).toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <Input
                     placeholder="Write a comment..."
@@ -214,15 +216,25 @@ export default function Comments() {
                 <Button onClick={handlePostComment}>Post</Button>
             </div>
             <div className="space-y-4">
-                {comments.map((comment) => (
+                {comments.map((comment, index) => (
                     <CommentComponent
-                        key={comment.id}
+                        key={comment.id + index}
                         comment={comment}
                         onDelete={handleDeleteComment}
                         onEdit={handleEditComment}
                     />
                 ))}
             </div>
+            {hasMore ?
+                <Button
+                    className='mt-3'
+                    onClick={loadMoreComments}
+                >
+                    Load More
+                </Button>
+                :
+                <></>
+            }
         </div>
     )
 }

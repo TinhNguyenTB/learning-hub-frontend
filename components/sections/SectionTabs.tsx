@@ -46,7 +46,10 @@ const SectionTabs = ({ section, resources, session }: SectionTabsProps) => {
             </TabsContent>
 
             <TabsContent value="comments">
-                <Comments />
+                <Comments
+                    session={session}
+                    courseId={section?.courseId}
+                />
             </TabsContent>
 
             <TabsContent value="ratings">
