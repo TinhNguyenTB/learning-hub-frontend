@@ -1,6 +1,7 @@
 import { getCourseByIdForStudent } from "@/app/actions/courses"
 import { getLevelById } from "@/app/actions/levels"
 import ReadText from "@/components/custom/ReadText"
+import SectionMenu from "@/components/layout/SectionMenu"
 import Image from "next/image"
 import { redirect } from "next/navigation"
 
@@ -19,9 +20,10 @@ const CourseOverview = async ({ params }: { params: { courseId: string } }) => {
 
     return (
         <div className="px-6 py-4 flex flex-col gap-5 text-sm">
-            <div className="flex justify-between">
-                <h1 className="text-2xl font-semibold">{course.title}</h1>
+            <div className="flex flex-col justify-between">
+                <h1 className="text-2xl font-bold">{course.title}</h1>
                 {/* Section menu for mobile */}
+                <SectionMenu course={course} />
             </div>
             <p className="font-medium">{course.subTitle}</p>
             <div className="flex gap-2 items-center">

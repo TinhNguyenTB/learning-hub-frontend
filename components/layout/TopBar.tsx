@@ -1,13 +1,14 @@
 'use client'
 
 import { getSession, Session } from "@/lib/session"
-import { SearchIcon } from "lucide-react"
+import { SearchIcon, Menu } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import UserButton from "@/components/auth/UserButton"
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
 const TopBar = () => {
     const [session, setSession] = useState<Session | null>(null);
@@ -19,9 +20,16 @@ const TopBar = () => {
         fetchSession();
     }, []);
 
+    const pathName = usePathname();
+
     const topRoutes = [
         { label: "Instructor", path: "/instructor/courses" },
         { label: "Learning", path: "/learning" }
+    ]
+
+    const sideBarRoutes = [
+        { label: "Courses", path: "/instructor/courses" },
+        { label: "Performance", path: "/instructor/performance" }
     ]
 
     const router = useRouter();
@@ -65,6 +73,40 @@ const TopBar = () => {
                             </Link>
                         )
                     })}
+                </div>
+                {/* mobile menu */}
+                <div className="w-full max-w-[200px] z-20 sm:hidden">
+                    <Sheet>
+                        <SheetTrigger><Menu className="w-5 h-5" /></SheetTrigger>
+                        <SheetContent className="flex flex-col gap-4">
+                            <div className="flex flex-col gap-4">
+                                {topRoutes.map(route => {
+                                    return (
+                                        <Link className="text-sm font-medium hover:text-[#FDAB04]"
+                                            href={route.path}
+                                            key={route.path}>
+                                            {route.label}
+                                        </Link>
+                                    )
+                                })}
+                            </div>
+                            {pathName.startsWith("/instructor") &&
+                                <div className="flex flex-col gap-4">
+                                    <div className="flex flex-col gap-4">
+                                        {sideBarRoutes.map(route => {
+                                            return (
+                                                <Link className="text-sm font-medium hover:text-[#FDAB04]"
+                                                    href={route.path}
+                                                    key={route.path}>
+                                                    {route.label}
+                                                </Link>
+                                            )
+                                        })}
+                                    </div>
+                                </div>
+                            }
+                        </SheetContent>
+                    </Sheet>
                 </div>
                 {session?.user ?
                     <UserButton user={session.user} />

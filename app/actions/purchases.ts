@@ -18,3 +18,19 @@ export const getPurchaseByCourseId = async (courseId: string, session: Session) 
         console.log(res)
     }
 }
+
+export const getCoursePurchaseForStudent = async (session: Session) => {
+    const res = await sendRequest<IBackendRes<IPurchase[]>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/purchases/student`,
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${session?.access_token}`
+        }
+    });
+    if (res.data) {
+        return res.data
+    }
+    else if (res.error) {
+        console.log(res)
+    }
+}

@@ -11,6 +11,7 @@ const ReactPlayer = dynamic(() => import("react-player/lazy"), { ssr: false });
 import ProgressButton from "@/components/sections/ProgressButton"
 import { Session } from "@/lib/session"
 import SectionTabs from "@/components/sections/SectionTabs"
+import SectionMenu from '@/components/layout/SectionMenu'
 
 
 interface SectionsDetailsProps {
@@ -52,21 +53,24 @@ const SectionsDetails = ({ course, resources, section, purchase, progress, sessi
         <div className="px-6 py-4 flex flex-col gap-5">
             <div className="flex flex-col md:flex-row md:justify-between md:items-center">
                 <h1 className="text-2xl font-semibold max-md:mb-4">{section?.title}</h1>
-                {!purchase ?
-                    <Button onClick={() => buyCourse()}>
-                        {isLoading ?
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                            :
-                            <p>Buy this course</p>
-                        }
-                    </Button>
-                    :
-                    <ProgressButton
-                        sectionId={section?.id}
-                        isCompleted={!!progress?.isCompleted}
-                        session={session}
-                    />
-                }
+                <div className="flex">
+                    <SectionMenu course={course} />
+                    {!purchase ?
+                        <Button onClick={() => buyCourse()}>
+                            {isLoading ?
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                                :
+                                <p>Buy this course</p>
+                            }
+                        </Button>
+                        :
+                        <ProgressButton
+                            sectionId={section?.id}
+                            isCompleted={!!progress?.isCompleted}
+                            session={session}
+                        />
+                    }
+                </div>
             </div>
 
             {isLocked ?
@@ -78,7 +82,7 @@ const SectionsDetails = ({ course, resources, section, purchase, progress, sessi
                 <>
                     <ReactPlayer
                         url={section?.videoUrl}
-                        className="max-w-full"
+                        className="max-w-screen-sm"
                         controls
                     />
                     <SectionTabs
