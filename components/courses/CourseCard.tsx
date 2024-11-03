@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Ratings from "@/components/custom/Rating";
+import { formatCurrency } from "@/lib/utils";
 
 interface CourseCardProps {
     course: ICourse
@@ -37,7 +38,7 @@ const CourseCard = async ({ course }: CourseCardProps) => {
                 </div>
                 <Ratings rating={course.averageRating!} variant="yellow" />
                 <div className="flex justify-between items-center">
-                    <p className="text-lg font-semibold">$ {course.price}</p>
+                    <p className="text-lg font-semibold">{formatCurrency(course.price)}</p>
                     {course.level &&
                         <div className="flex gap-1 items-center">
                             <Gem size={20} />

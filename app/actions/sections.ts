@@ -20,7 +20,7 @@ export const getPublishedSection = async (courseId: string) => {
 
 export const getPublishedSectionById = async (access_token: string, sectionId: string) => {
     const res = await sendRequest<IBackendRes<ISection>>({
-        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/sections/${sectionId}`,
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/sections/${sectionId}/published`,
         method: 'GET',
         headers: {
             Authorization: `Bearer ${access_token}`

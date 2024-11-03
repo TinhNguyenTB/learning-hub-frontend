@@ -70,23 +70,24 @@ const SectionsDetails = ({ course, resources, section, purchase, progress, sessi
             </div>
 
             {isLocked ?
-                <div className="px-10 flex flex-col gap-5 items-center bg-[#FFF8EB]">
+                <div className="px-10 py-2 flex flex-col gap-5 items-center bg-[rgb(241,245,249)]">
                     <Lock className="h-8 w-8" />
                     <p className="text-sm font-bold">Video for this section is locked. Please buy the course to access.</p>
                 </div>
                 :
-                <ReactPlayer
-                    url={section?.videoUrl}
-                    className="max-w-full"
-                    controls
-                />
+                <>
+                    <ReactPlayer
+                        url={section?.videoUrl}
+                        className="max-w-full"
+                        controls
+                    />
+                    <SectionTabs
+                        session={session}
+                        section={section}
+                        resources={resources}
+                    />
+                </>
             }
-
-            <SectionTabs
-                session={session}
-                section={section}
-                resources={resources}
-            />
         </div>
     )
 }

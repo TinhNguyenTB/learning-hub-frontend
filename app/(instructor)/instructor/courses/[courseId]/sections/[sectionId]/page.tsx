@@ -9,6 +9,7 @@ const SectionDetailPage = async ({ params }: { params: { courseId: string; secti
 
     let course;
     let section;
+
     const resCourse = await sendRequest<IBackendRes<ICourse>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/courses/${params.courseId}`,
         method: 'GET',

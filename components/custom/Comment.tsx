@@ -15,17 +15,17 @@ dayjs.extend(relativeTime);
 
 const CommentComponent: React.FC<{
     comment: IComment,
-    depth?: number,
     onDelete: (id: string) => void,
     onEdit: (id: string, newContent: string) => void,
+    session: Session
 
-}> = ({ comment, depth = 0, onDelete, onEdit }) => {
+}> = ({ comment, onDelete, onEdit, session }) => {
 
     const [isEditing, setIsEditing] = useState(false)
     const [editContent, setEditContent] = useState(comment.content)
 
     return (
-        <div className={`flex ${depth > 0 ? 'ml-2 mt-2' : 'mt-4'}`}>
+        <div className='flex'>
             <Avatar className="w-8 h-8 mt-1">
                 <AvatarImage src={comment.user?.image} alt={comment.user?.name} />
                 <AvatarFallback>{comment.user?.name.slice(0, 1).toUpperCase()}</AvatarFallback>
@@ -39,24 +39,26 @@ const CommentComponent: React.FC<{
                                 {dayjs(comment.createdAt).fromNow()}
                             </span>
                         </div>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                                    <span className="sr-only">Open menu</span>
-                                    <MessageSquare className="h-4 w-4" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuItem onClick={() => setIsEditing(true)}>
-                                    <Pencil className="mr-2 h-4 w-4" />
-                                    <span>Edit</span>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => onDelete(comment?.id)}>
-                                    <Trash2 className="mr-2 h-4 w-4" />
-                                    <span>Delete</span>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                        {comment.userId === session.user.id &&
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                        <span className="sr-only">Open menu</span>
+                                        <MessageSquare className="h-4 w-4" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuItem onClick={() => setIsEditing(true)}>
+                                        <Pencil className="mr-2 h-4 w-4" />
+                                        <span>Edit</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => onDelete(comment?.id)}>
+                                        <Trash2 className="mr-2 h-4 w-4" />
+                                        <span>Delete</span>
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        }
                     </div>
                     {isEditing ? (
                         <div className="mt-2">
@@ -191,6 +193,7 @@ export default function Comments({ session, courseId }: CommentsProps) {
                         comment={comment}
                         onDelete={handleDeleteComment}
                         onEdit={handleEditComment}
+                        session={session}
                     />
                 ))}
             </div>
