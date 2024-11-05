@@ -39,7 +39,7 @@ const TopBar = () => {
                     <span className="text-xl font-bold">LearningHub</span>
                 </Link>
                 <nav className="hidden md:flex space-x-6">
-                    <Link href="#" className="text-gray-600 hover:text-primary">Courses</Link>
+                    <Link href="/courses" className="text-gray-600 hover:text-primary">Courses</Link>
                     <Link href="#" className="text-gray-600 hover:text-primary">About</Link>
                     <Link href="#" className="text-gray-600 hover:text-primary">Contact</Link>
                 </nav>
