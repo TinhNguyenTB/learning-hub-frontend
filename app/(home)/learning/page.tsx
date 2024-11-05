@@ -12,10 +12,10 @@ const LearningPage = async () => {
     const purchaseCourses = await getCoursePurchaseForStudent(session);
     return (
         <div className="px-4 py-6 md:mt-5 md:px-10 xl:px-16">
-            <h1 className="text-2xl font-bold">
+            <h1 className="text-2xl font-bold mb-5">
                 Your courses
             </h1>
-            <div className="flex flex-wrap gap-7 mt-7">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {purchaseCourses && purchaseCourses.map(purchase => (
                     <CourseCard key={purchase.course.id} course={purchase.course} />
                 ))}
