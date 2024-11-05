@@ -33,8 +33,10 @@ const Banner = () => {
                                     handleSearch();
                             }}
                         />
-                        <Button size="lg" className="bg-white text-primary hover:bg-gray-100">
-                            <Search className="mr-2 h-4 w-4" /> Search
+                        <Button size="lg" className="bg-white text-primary hover:bg-gray-100"
+                            disabled={searchInput.trim() === ""}
+                        >
+                            <Search className="mr-2 h-4 w-4" onClick={() => handleSearch()} /> Search
                         </Button>
                     </div>
                 </div>
