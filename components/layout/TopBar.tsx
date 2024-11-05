@@ -33,22 +33,23 @@ const TopBar = () => {
 
     return (
         <div className="flex justify-between items-center p-4 shadow">
-            <Link href={"/"} className="flex items-center space-x-2">
-                <BookOpen className="h-8 w-8 text-primary" />
-                <span className="text-xl font-bold">LearningHub</span>
-            </Link>
-            <nav className="hidden md:flex space-x-6">
-                <Link href="#" className="text-gray-600 hover:text-primary">Courses</Link>
-                <Link href="#" className="text-gray-600 hover:text-primary">About</Link>
-                <Link href="#" className="text-gray-600 hover:text-primary">Contact</Link>
-            </nav>
-
+            <div className="flex items-center gap-10">
+                <Link href={"/"} className="flex items-center space-x-2">
+                    <BookOpen className="h-8 w-8 text-primary" />
+                    <span className="text-xl font-bold">LearningHub</span>
+                </Link>
+                <nav className="hidden md:flex space-x-6">
+                    <Link href="#" className="text-gray-600 hover:text-primary">Courses</Link>
+                    <Link href="#" className="text-gray-600 hover:text-primary">About</Link>
+                    <Link href="#" className="text-gray-600 hover:text-primary">Contact</Link>
+                </nav>
+            </div>
             {session?.user ?
                 <div className="flex gap-6 items-center">
                     <div className="max-sm:hidden flex gap-6">
                         {topRoutes.map(route => {
                             return (
-                                <Link className="text-sm font-medium text-gray-600 hover:text-primary"
+                                <Link className="text-gray-600 hover:text-primary"
                                     href={route.path} key={route.path}>
                                     {route.label}
                                 </Link>
@@ -63,7 +64,7 @@ const TopBar = () => {
                                 <div className="flex flex-col gap-4">
                                     {topRoutes.map(route => {
                                         return (
-                                            <Link className="text-sm font-medium text-gray-600 hover:text-primary"
+                                            <Link className="text-gray-600 hover:text-primary"
                                                 href={route.path}
                                                 key={route.path}>
                                                 {route.label}
@@ -76,7 +77,7 @@ const TopBar = () => {
                                         <div className="flex flex-col gap-4">
                                             {sideBarRoutes.map(route => {
                                                 return (
-                                                    <Link className="text-sm font-medium text-gray-600 hover:text-primary"
+                                                    <Link className="text-gray-600 hover:text-primary"
                                                         href={route.path}
                                                         key={route.path}>
                                                         {route.label}

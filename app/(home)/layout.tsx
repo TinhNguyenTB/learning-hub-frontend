@@ -1,4 +1,5 @@
 import Banner from '@/components/layout/Banner'
+import Footer from '@/components/layout/Footer'
 import TopBar from '@/components/layout/TopBar'
 import React from 'react'
 
@@ -8,6 +9,7 @@ const HomeLayout = ({ children }: { children: React.ReactNode }) => {
             <TopBar />
             <Banner />
             {children}
+            <Footer />
         </div>
     )
 }

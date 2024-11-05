@@ -44,6 +44,7 @@ const Banner = () => {
                         alt="Online learning illustration"
                         width={600}
                         height={400}
+                        priority
                         className="rounded-lg shadow-lg"
                     />
                 </div>
