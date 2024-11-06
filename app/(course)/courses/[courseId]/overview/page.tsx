@@ -2,7 +2,7 @@ import { getCourseByIdForStudent } from "@/app/actions/courses"
 import { getLevelById } from "@/app/actions/levels"
 import ReadText from "@/components/custom/ReadText"
 import SectionMenu from "@/components/layout/SectionMenu"
-import Image from "next/image"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { redirect } from "next/navigation"
 
 const CourseOverview = async ({ params }: { params: { courseId: string } }) => {
@@ -27,13 +27,14 @@ const CourseOverview = async ({ params }: { params: { courseId: string } }) => {
             </div>
             <p className="font-medium">{course.subTitle}</p>
             <div className="flex gap-2 items-center">
-                <Image
-                    src={instructor?.image || "/avatar_placeholder.jpg"}
-                    alt={instructor?.name || "Instructor photo"}
-                    width={30}
-                    height={30}
-                    className="rounded-full"
-                />
+                <Avatar>
+                    <AvatarImage
+                        src={instructor?.image ?? ""}
+                    />
+                    <AvatarFallback className="uppercase font-bold bg-black text-white">
+                        {instructor?.name?.slice(0, 1)}
+                    </AvatarFallback>
+                </Avatar>
                 <p>{instructor?.name}</p>
             </div>
             <div className="flex gap-2">

@@ -35,7 +35,6 @@ export const getCoursesByCategory = async (categoryId: string | null, current?: 
 }
 
 export const getCourseBySearch = async (search?: string | null, current?: string, pageSize?: string) => {
-
     const res = await sendRequest<IBackendRes<IModelPaginate<ICourse>>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/courses`,
         method: 'GET',
@@ -54,4 +53,15 @@ export const getCourseBySearch = async (search?: string | null, current?: string
             pages: res.data.meta.pages
         }
     }
+}
+
+export const getFeaturedCourses = async () => {
+    const res = await sendRequest<IBackendRes<ICourse[]>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/courses/featured`,
+        method: 'POST',
+    })
+    if (res?.data) {
+        return res.data
+    }
+    console.log(res)
 }

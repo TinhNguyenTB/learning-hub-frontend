@@ -1,6 +1,5 @@
 import { getCourseByIdForStudent } from "@/app/actions/courses";
 import CourseSideBar from "@/components/layout/CourseSideBar";
-import TopBar from "@/components/layout/TopBar";
 import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 
@@ -23,8 +22,7 @@ const CourseDetailLayout = async ({
     }
 
     return (
-        <div className="h-full flex flex-col">
-            <TopBar />
+        <div className="min-h-screen flex flex-col">
             <div className="flex-1 flex">
                 <CourseSideBar
                     course={course}

@@ -11,7 +11,7 @@ const LearningPage = async () => {
 
     const purchaseCourses = await getCoursePurchaseForStudent(session);
     return (
-        <div className="px-4 py-6 md:mt-5 md:px-10 xl:px-16">
+        <div className="px-4 py-6 md:mt-5 md:px-10 xl:px-16 min-h-screen">
             <h1 className="text-2xl font-bold mb-5">
                 Your courses
             </h1>
