@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import { getFeaturedCourses } from "@/app/actions/courses";
 import CourseCard from "@/components/courses/CourseCard";
 

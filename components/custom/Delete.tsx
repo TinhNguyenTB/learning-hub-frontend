@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { sendRequest } from "@/lib/api";
 import { Session } from "@/lib/session";
+import { revalidatePath } from "next/cache";
 
 interface DeleteProps {
     item: string;
@@ -48,6 +49,7 @@ const Delete = ({ item, courseId, sectionId, session }: DeleteProps) => {
                 router.push(pushedUrl);
                 router.refresh();
                 toast.success(`${item} deleted`)
+                revalidatePath("/courses", 'page')
             }
         }
         catch (error) {

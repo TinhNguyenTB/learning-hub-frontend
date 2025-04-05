@@ -29,7 +29,7 @@ const formSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
     password: z.string({
         required_error: "Password is required"
-    }).trim().min(1, "Password must contain at least 1 character"),
+    }).trim().min(2, "Password must contain at least 2 character").max(10, "Password must contain at most 10 character"),
     confirmPassword: z.string()
 }).refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",

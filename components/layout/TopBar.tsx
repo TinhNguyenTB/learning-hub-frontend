@@ -32,7 +32,7 @@ const TopBar = () => {
     ]
 
     return (
-        <div className="flex justify-between items-center p-4 shadow">
+        <div className="flex justify-between items-center p-4 sticky top-0 z-50 bg-white backdrop-blur-sm shadow-sm">
             <div className="flex items-center gap-10">
                 <Link href={"/"} className="flex items-center space-x-2">
                     <BookOpen className="h-8 w-8 text-primary" />
