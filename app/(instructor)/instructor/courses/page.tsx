@@ -6,7 +6,8 @@ import { getSession } from '@/lib/session';
 import Link from 'next/link';
 
 const CoursesPage = async () => {
-    let courses;
+
+    let courses = [] as ICourse[];
     const session = await getSession()
 
     const res = await sendRequest<IBackendRes<ICourse[]>>({
@@ -25,12 +26,10 @@ const CoursesPage = async () => {
                 <Button>Create New Course</Button>
             </Link>
             <div className='mt-5'>
-                {courses &&
-                    <DataTable
-                        columns={columns}
-                        data={courses}
-                    />
-                }
+                <DataTable
+                    columns={columns}
+                    data={courses}
+                />
             </div>
         </div>
     )
